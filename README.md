@@ -1,6 +1,4 @@
 <p align="center"><img src="http://www.doapps.me/images/logo-color-doapps.png" width="250px"></p>
-<p>&nbsp;</p>
-
 # Genesis
 Genesis is the official project builder from [DoApps](http://doapps.me/). It provides all necessary project structure for managing and start up a new project.
 
