@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>genesis</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.1.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <style type="text/css">
+      #item-tab {
+      opacity: .5;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      color: #f5f7fa;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      margin: 0px -5px 0px -5px;
+      padding: 6px 12px;
+      vertical-align: top;
+      }
+      .tabs.active {
+      color: red !important;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero is-dark">
+      <div class="hero-head">
+        <header class="nav">
+          <div class="container">
+            <div class="nav-left">
+            </div>
+            <div class="nav-center">
+              <a class="nav-item" href="#">
+              <span class="icon">
+              <i class="fa fa-diamond"></i>
+              </span>
+              </a>
+            </div>
+            <div class="nav-right nav-menu">
+            </div>
+          </div>
+        </header>
+      </div>
+      <div class="hero-foot">
+        <nav class="tabs">
+          <div class="container">
+            <ul>
+              <li>
+                <span id="item-tab">Basic Setup</span>
+              </li>
+              <li>
+                <span class="icon is-small" id="item-tab"><i class="fa fa-caret-right"></i></span>
+              </li>
+              <li class="is-active">
+                <span>Project Structure</span>
+              </li>
+              <li>
+                <span class="icon is-small" id="item-tab"><i class="fa fa-caret-right"></i></span>
+              </li>
+              <li>
+                <span id="item-tab">Integrations Setup</span>
+              </li>
+              <li>
+                <span class="icon is-small" id="item-tab"><i class="fa fa-caret-right"></i></span>
+              </li>
+              <li>
+                <span id="item-tab">Build Project</span>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-3">
+            <aside class="menu">
+              <p class="menu-label">
+                <strong>proyecto nuevo</strong>
+              </p>
+              <ul class="menu-list">
+                <li>
+                  <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;diagram
+                  <ul>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;architecture
+                      <ul>
+                        <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;README</a></li>
+                      </ul>
+                    </li>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;database
+                      <ul>
+                        <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;CHANGELOG</a></li>
+                        <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;README</a></li>
+                      </ul>
+                    </li>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;software
+                      <ul>
+                        <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;CHANGELOG</a></li>
+                        <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;README</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;doc
+                  <ul>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;closure
+                    </li>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;planning
+                      <ul>
+                        <li>
+                          <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;schedule
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;testing
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;release
+                  <ul>
+                    <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;README</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;<strong>ui</strong>
+                  <ul>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;<strong>android</strong>
+                      <ul>
+                        <li>
+                          <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;assets
+                          <ul>
+                            <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;drawable-hdpi</li>
+                            <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;drawable-xhdpi</li>
+                            <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;drawable-xxhdpi</li>
+                            <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;drawable-xxxhdpi</li>
+                            <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;mipmap-hdpi</li>
+                            <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;mipmap-xhdpi</li>
+                            <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;mipmap-xxhdpi</li>
+                            <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;mipmap-xxxhdpi</li>
+                          </ul>
+                        </li>
+                        <li>
+                          <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;files
+                          <ul>
+                            <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;colors</a></li>
+                            <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;fonts</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;<strong>mockups</strong>
+                          <ul>
+                            <li>
+                              <a class="is-active" href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;README</a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;ios
+                      <ul>
+                        <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;assets</li>
+                        <li>
+                          <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;files
+                          <ul>
+                            <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;colors</a></li>
+                            <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;fonts</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;mockups
+                          <ul>
+                            <li>
+                              <a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;README</a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;web
+                      <ul>
+                        <li><span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;assets</li>
+                        <li>
+                          <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;files
+                          <ul>
+                            <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;colors</a></li>
+                            <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;fonts</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <span class="icon is-small"><i class="fa fa-folder"></i></span>&nbsp;mockups
+                          <ul>
+                            <li>
+                              <a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span>&nbsp;README</a>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </aside>
+          </div>
+          <div class="column">
+            <div class="notification">
+              <div class="content">
+                <h1>planning</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla accumsan, metus ultrices eleifend gravida, nulla nunc varius lectus,
+                  nec rutrum justo nibh eu lectus. Ut vulputate semper dui. Fusce erat odio, sollicitudin vel erat vel, interdum mattis neque.
+                </p>
+                <h2>Second level</h2>
+                <p>Curabitur accumsan turpis pharetra <strong>augue tincidunt</strong> blandit. Quisque condimentum maximus mi, sit amet commodo arcu rutrum id.
+                  Proin pretium urna vel cursus venenatis. Suspendisse potenti. Etiam mattis sem rhoncus lacus dapibus facilisis. Donec at dignissim dui. Ut et neque nisl.
+                </p>
+                <ul>
+                  <li>In fermentum leo eu lectus mollis, quis dictum mi aliquet.</li>
+                  <li>Ut non enim metus.</li>
+                </ul>
+                <h3>Third level</h3>
+                <p>Quisque ante lacus, malesuada ac auctor vitae, congue <a href="#">non ante</a>. Phasellus lacus ex, semper ac tortor nec, fringilla condimentum orci. Fusce eu rutrum tellus.</p>
+                <ol>
+                  <li>Donec blandit a lorem id convallis.</li>
+                  <li>Vivamus maximus ultricies pulvinar.</li>
+                </ol>
+                <blockquote>Ut venenatis, nisl scelerisque sollicitudin fermentum, quam libero hendrerit ipsum, ut blandit est tellus sit amet turpis.</blockquote>
+                <p>Quisque at semper enim, eu hendrerit odio. Etiam auctor nisl et <em>justo sodales</em> elementum. Maecenas ultrices lacus quis neque consectetur, et lobortis nisi molestie.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <nav class="pagination">
+          <ul>&nbsp;</ul>
+          <a class="button is-dark">
+          Siguiente
+          </a>
+          <ul>&nbsp;</ul>
+        </nav>
+      </div>
+    </section>
+    <footer class="footer">
+      <div class="container">
+        <div class="content has-text-centered">
+          <p>
+            <strong>Ø</strong>
+            <br/>
+            <small>v.0.0.1</small>
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
