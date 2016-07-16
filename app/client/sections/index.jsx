@@ -6,6 +6,7 @@ import BasicSetupSection from 'sections/basic-setup';
 import ProjectStructureSection from 'sections/project-structure';
 import IntegrationsSetupSection from 'sections/integrations-setup';
 import BuildProjectSection from 'sections/build-project';
+import { slugify } from 'lib/form-helpers';
 
 const Builder = React.createClass( {
   displayName: 'Builder',
@@ -17,12 +18,29 @@ const Builder = React.createClass( {
     };
   },
 
-  updateProjectName( projectName ) {
-    this.state( { projectName } );
+  updateProjectName( event ) {
+    const nameText = event.target.value;
+    let newState = {
+      projectName: nameText
+    };
+
+    if ( ! this.state.projectNamespace ) {
+      const namespaceText = slugify( name );
+
+      newState.projectNamespace: namespaceText;
+    }
+
+    this.setState( newState );
   },
 
-  updateProjectNamespace( projectNamespace ) {
-    this.state( { projectNamespace } );
+  updateProjectNamespace( event ) {
+    const namespaceText = event.target.value;
+
+    // TODO: formatting validation
+
+    this.setState( {
+      projectNamespace: namespaceText
+    } );
   },
 
   render() {
@@ -30,7 +48,8 @@ const Builder = React.createClass( {
       <div>
         <Masterbar/>
         <BasicSetupSection
-          updateProjectName={ this.updateProjectName }/>
+          updateProjectName={ this.updateFieldState.bind( null, 'projectName' ) }
+          updateProjectNamespace={ this.updateFieldState.bind( null, 'projectNamespace' ) }/>
         <Footer/>
       </div>
     );

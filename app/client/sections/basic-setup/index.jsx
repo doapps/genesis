@@ -1,5 +1,4 @@
 import React from 'react';
-import LinkedStateMixin from 'react-addons-linked-state-mixin';
 
 import Main from 'components/main';
 import { Step, TextInput, CheckBox } from 'components/form';
@@ -9,13 +8,8 @@ import NavigationButtons from 'components/navigation';
 const BasicSetupSection = React.createClass( {
   displayName: 'BasicSetupSection',
 
-  mixins: [ LinkedStateMixin ],
-
   propTypes: {
-    storedEmail: React.PropTypes.string,
-    onSave: React.PropTypes.func,
-    onCancel: React.PropTypes.func,
-    onDelete: React.PropTypes.func
+    updateProjectName: React.PropTypes.func
   },
 
   getDefaultProps: function() {
@@ -29,11 +23,22 @@ const BasicSetupSection = React.createClass( {
       <Main>
         <TitleSection/>
         <SubtitleSection/>
-        <Step>
-          <TextInput placeholder="Proyecto Nuevo"/>
+        <Step
+          stepNumber="1"
+          title="Ingrese el nombre del proyecto">
+          <TextInput
+            placeholder="Proyecto Nuevo",
+            value={ this.props.projectName }
+            onChange={ this.props.updateProjectName } />
         </Step>
-        <Step>
-          <TextInput placeholder="proyecto-nuevo"/>
+        <Step
+          stepNumber="2"
+          title="Establezca un nombre de identificacion"
+          description="con este nombre se crearán todas las carpetas y repositorios" >
+          <TextInput
+            placeholder="proyecto-nuevo"
+            value={ this.props.projectNamespace }
+            onChange={ this.props.updateProjectNamespace }/>
         </Step>
         <Step>
           <CheckBox/>

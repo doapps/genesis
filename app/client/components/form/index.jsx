@@ -1,14 +1,35 @@
 import React from 'react';
+import classnames from 'classnames';
 
 export const TextInput = React.createClass( {
+  getDefaultProps() {
+    return {
+      isCorrect: false,
+      placeholder: 'New Project'
+    }
+  },
+
   render() {
+    const { isCorrect, placeholder } = this.props;
+
+    const styleInput = classnames( {
+      input: true,
+      'is-medium': true,
+      'is-success': isCorrect
+    } );
+
+    const icon = isCorrect
+      ? <i className="fa fa-check"></i>
+      : null;
+
     return (
       <p className="control has-icon has-icon-right">
         <input
-          className="input is-medium is-success"
+          className={ styleInput }
           type="text"
-          placeholder={ this.props.placeholder } />
-        <i className="fa fa-check"></i>
+          placeholder={ placeholder }
+          { ...this.props } />
+        { icon }
       </p>
     );
   }
@@ -33,18 +54,32 @@ export const CheckBox = React.createClass( {
 } );
 
 export const Step = React.createClass( {
+  getDefaultProps() {
+    return {
+      stepNumber: '#',
+      title: 'This is a step',
+      description: null
+    }
+  },
+
   render() {
+    const { stepNumber, title, description } = this.props;
+
     return (
       <article className="media is-large">
-        <div className="media-number">1</div>
+        <div className="media-number">{ stepNumber }</div>
         <div className="media-content">
           <p className="title is-5">
-            <strong>Ingrese</strong> el nombre del proyecto:
+            { title }
           </p>
           { this.props.children }
-          <div className="content">
-            con este nombre se crearán todas las carpetas y repositorios
-          </div>
+          {
+            description
+            ? <div className="content">
+                { description }
+              </div>
+            : null
+          }
         </div>
       </article>
     );
