@@ -31,4 +31,4 @@ The `app` folder keeps the React based web application. Meanwhile the `project` 
 
 ## License
 Genesis is distributed under the following license:
-- Apache License version 2.0.
+- MIT License
