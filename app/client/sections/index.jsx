@@ -8,11 +8,29 @@ import IntegrationsSetupSection from 'sections/integrations-setup';
 import BuildProjectSection from 'sections/build-project';
 
 const Builder = React.createClass( {
+  displayName: 'Builder',
+
+  getInitialState: function() {
+    return {
+      projectName: null,
+      projectNamespace: null
+    };
+  },
+
+  updateProjectName( projectName ) {
+    this.state( { projectName } );
+  },
+
+  updateProjectNamespace( projectNamespace ) {
+    this.state( { projectNamespace } );
+  },
+
   render() {
     return (
       <div>
         <Masterbar/>
-        <ProjectStructureSection/>
+        <BasicSetupSection
+          updateProjectName={ this.updateProjectName }/>
         <Footer/>
       </div>
     );
