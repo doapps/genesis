@@ -9,8 +9,12 @@ const IntegrationsSetupSection = React.createClass( {
   render() {
     return (
       <Main>
-        <TitleSection/>
-        <SubtitleSection/>
+        <TitleSection>
+          Integraciones
+        </TitleSection>
+        <SubtitleSection>
+          Seleccione las <strong>integraciones</strong> de la lista
+        </SubtitleSection>
           <div className="columns is-multiline">
             <ConnectionCard/>
             <ConnectionCard/>

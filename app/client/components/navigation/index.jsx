@@ -5,7 +5,9 @@ const NavigationButtons = React.createClass( {
     return (
       <nav className="pagination">
         <ul>&nbsp;</ul>
-          <a className="button is-dark">
+          <a
+            className="button is-dark"
+            onClick={ this.props.onClick }>
             Siguiente
           </a>
         <ul>&nbsp;</ul>

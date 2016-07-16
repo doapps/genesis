@@ -8,13 +8,25 @@ import IntegrationsSetupSection from 'sections/integrations-setup';
 import BuildProjectSection from 'sections/build-project';
 import { slugify } from 'lib/form-helpers';
 
+const debug = require( 'debug' )( 'app:sections' );
+
+const steps = [
+  'basic-setup',
+  'project-structure',
+  'integrations-setup',
+  'build-project'
+];
+
 const Builder = React.createClass( {
   displayName: 'Builder',
 
-  getInitialState: function() {
+  getInitialState() {
     return {
       projectName: null,
-      projectNamespace: null
+      projectNamespace: null,
+      targetAndroidCheckbox: false,
+      targetIosCheckbox: false,
+      targetWebCheckbox: false
     };
   },
 
@@ -43,13 +55,25 @@ const Builder = React.createClass( {
     } );
   },
 
+  checkTarget( target ) {
+    this.setState( {
+      [ target ]: ! this.state[ target ]
+    } );
+  },
+
+  goToNextStep() {
+    debug( 'next step' );
+  },
+
   render() {
     return (
       <div>
         <Masterbar/>
         <BasicSetupSection
-          updateProjectName={ this.updateFieldState.bind( null, 'projectName' ) }
-          updateProjectNamespace={ this.updateFieldState.bind( null, 'projectNamespace' ) }/>
+          updateProjectName={ this.updateProjectName }
+          updateProjectNamespace={ this.updateProjectNamespace }
+          checkTarget={ this.checkTarget }
+          goToNextStep={ this.goToNextStep } />
         <Footer/>
       </div>
     );

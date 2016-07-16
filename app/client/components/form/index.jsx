@@ -1,7 +1,15 @@
 import React from 'react';
 import classnames from 'classnames';
 
+export const InputContainer = ( { children } ) => (
+  <div className="control">
+    { children }
+  </div>
+);
+
 export const TextInput = React.createClass( {
+  displayName: 'TextInput',
+
   getDefaultProps() {
     return {
       isCorrect: false,
@@ -36,24 +44,23 @@ export const TextInput = React.createClass( {
 } );
 
 export const CheckBox = React.createClass( {
+  displayName: 'CheckBox',
+
   render() {
     return (
-      <p className="control">
-        <label className="checkbox">
-          <input type="checkbox"/> Android
-        </label>&nbsp;
-        <label className="checkbox">
-          <input type="checkbox"/> iOS
-        </label>&nbsp;
-        <label className="checkbox">
-          <input type="checkbox"/> Web
-        </label>
-      </p>
+      <label className="checkbox">
+        <input
+          type="checkbox"
+          { ...this.props } />
+          { this.props.label }
+      </label>
     );
   }
 } );
 
 export const Step = React.createClass( {
+  displayName: 'Step',
+
   getDefaultProps() {
     return {
       stepNumber: '#',
@@ -87,6 +94,8 @@ export const Step = React.createClass( {
 } );
 
 export const BuildButton = React.createClass( {
+  displayName: 'BuildButton',
+
   render() {
     return (
       <div className="hero-buttons">

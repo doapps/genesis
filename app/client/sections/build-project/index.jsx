@@ -9,8 +9,12 @@ const BuildProjectSection = React.createClass( {
   render() {
     return (
       <Main>
-        <TitleSection/>
-        <SubtitleSection/>
+        <TitleSection>
+          Resumen
+        </TitleSection>
+        <SubtitleSection>
+          A continuacion, se listan los modulos a construir
+        </SubtitleSection>
         <div className="content">
           <ul>
             <li>
