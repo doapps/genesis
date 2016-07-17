@@ -39,7 +39,7 @@ const Builder = React.createClass( {
     if ( ! this.state.projectNamespace ) {
       const namespaceText = slugify( name );
 
-      newState.projectNamespace: namespaceText;
+      newState.projectNamespace = namespaceText;
     }
 
     this.setState( newState );

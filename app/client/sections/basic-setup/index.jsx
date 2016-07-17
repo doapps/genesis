@@ -27,7 +27,7 @@ const BasicSetupSection = React.createClass( {
           stepNumber="1"
           title="Ingrese el nombre del proyecto">
           <TextInput
-            placeholder="Proyecto Nuevo",
+            placeholder="Proyecto Nuevo"
             value={ this.props.projectName }
             onChange={ this.props.updateProjectName } />
         </Step>
