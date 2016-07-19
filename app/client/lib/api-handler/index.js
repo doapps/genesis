@@ -4,7 +4,7 @@ const debug = require( 'debug' )( 'app:lib:api-handler' );
 
 // Github
 const githubApiPath = 'https://api.github.com';
-const rootSHA = '4b96c713ea2531e3b14362559a652bcd617f57b3';
+const rootSHA = 'a23caa93b11ca99f1ee1ccaacdba5f119333998b';
 const githubUser = 'doapps';
 const githubRepo = 'genesis';
 

@@ -6,7 +6,7 @@ const debug = require( 'debug' )( 'app:lib:github-tree:store' );
 
 const directoryTree = {
   name: 'dspp-tree',
-  toggled: true,
+  toggled: false,
   children: []
 };
 

@@ -26,27 +26,24 @@ class NodeHeader extends React.Component {
   }
 
   render() {
-    const {style, decorators} = this.props;
+    const { decorators } = this.props;
     const terminal = ! this.props.node.children;
     const active = this.props.node.active;
-    const container = [ style.link, active ? style.activeLink : null ];
-    const headerStyles = Object.assign( { container }, this.props.style );
 
     return (
       <decorators.Container
-        style={headerStyles}
-        decorators={decorators}
-        terminal={terminal}
-        onClick={this.props.onClick}
-        animations={this.props.animations}
-        node={this.props.node}
+        decorators={ decorators }
+        active={ active }
+        terminal={ terminal }
+        onClick={ this.props.onClick }
+        animations={ this.props.animations }
+        node={ this.props.node }
       />
     );
   }
 }
 
 NodeHeader.propTypes = {
-  style: React.PropTypes.object.isRequired,
   decorators: React.PropTypes.object.isRequired,
   animations: React.PropTypes.oneOfType( [ React.PropTypes.object, React.PropTypes.bool ] ).isRequired,
   node: React.PropTypes.object.isRequired,
