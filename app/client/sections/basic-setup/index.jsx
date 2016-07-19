@@ -38,7 +38,7 @@ const BasicSetupSection = React.createClass( {
           <TextInput
             placeholder="proyecto-nuevo"
             value={ this.props.projectNamespace }
-            onChange={ this.props.updateProjectNamespace }/>
+            onChange={ this.props.updateProjectNamespace } />
         </Step>
         <Step
           stepNumber="3"

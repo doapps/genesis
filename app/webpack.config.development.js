@@ -9,7 +9,8 @@ if (process.env.NODE_ENV !== 'test') {
   ].concat(config.entry);
 }
 
-config.devtool = 'cheap-module-eval-source-map';
+// config.devtool = 'cheap-module-eval-source-map';
+config.devtool = '#eval';
 
 config.module.loaders = config.module.loaders.concat([
   {test: /\.jsx?$/, loaders: [ 'babel'], exclude: /node_modules/}

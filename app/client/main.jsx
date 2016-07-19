@@ -4,6 +4,6 @@ import Landing from 'pages/landing';
 import Sections from 'sections';
 
 ReactDOM.render(
-  React.createElement( Landing, {} ),
+  React.createElement( Sections, {} ),
   document.getElementById( 'app' )
 );

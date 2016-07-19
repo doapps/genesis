@@ -6,8 +6,8 @@ This is the source code of the main application
 
 Clone repository and run:
 
-```sh
-$ npm install
+```
+npm install
 ```
 
 ## Requirements
@@ -16,8 +16,8 @@ node 5+
 
 ## Development
 
-```sh
-$ npm start
+```
+npm start
 ```
 
 Go to [http://localhost:8080](http://localhost:8080).
@@ -26,32 +26,32 @@ Go to [http://localhost:8080](http://localhost:8080).
 
 If you want to run the project in production, set the `NODE_ENV` environment variable to `production`.
 
-```sh
-$ NODE_ENV=production npm start
+```
+NODE_ENV=production npm start
 ```
 
 Also build the production bundle:
 
-```sh
-$ npm run dist
+```
+npm run dist
 ```
 
 ## Tests
 
-```sh
-$ npm test
+```
+npm test
 ```
 
 Only run specific tests
 
-```sh
-$ npm test -- NotFoundComponent
+```
+npm test -- NotFoundComponent
 ```
 
 Coverage
 
-```sh
-$ npm test -- --coverage
+```
+npm test -- --coverage
 ```
 
 ## License

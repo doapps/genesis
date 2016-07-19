@@ -7,6 +7,8 @@ import ProjectStructureSection from 'sections/project-structure';
 import IntegrationsSetupSection from 'sections/integrations-setup';
 import BuildProjectSection from 'sections/build-project';
 import { slugify } from 'lib/form-helpers';
+import GithubTreeActions from 'lib/github-tree/actions';
+import GithubTreeStore from 'lib/github-tree/store';
 
 const debug = require( 'debug' )( 'app:sections' );
 
@@ -26,8 +28,24 @@ const Builder = React.createClass( {
       projectNamespace: null,
       targetAndroidCheckbox: false,
       targetIosCheckbox: false,
-      targetWebCheckbox: false
+      targetWebCheckbox: false,
+      projectTree: []
     };
+  },
+
+  componentDidMount() {
+    GithubTreeActions.buildRepositoryTree();
+    GithubTreeStore.on( 'change', this.updateProjectTree );
+  },
+
+  componentWillUnmount() {
+    GithubTreeStore.removeListener( 'change', this.updateProjectTree );
+  },
+
+  updateProjectTree() {
+    const tree = GithubTreeStore.getProjectStructure();
+
+    this.setState( { projectTree: tree } );
   },
 
   updateProjectName( event ) {
@@ -65,15 +83,28 @@ const Builder = React.createClass( {
     debug( 'next step' );
   },
 
+  renderStep1() {
+    return (
+      <BasicSetupSection
+        updateProjectName={ this.updateProjectName }
+        updateProjectNamespace={ this.updateProjectNamespace }
+        checkTarget={ this.checkTarget }
+        goToNextStep={ this.goToNextStep } />
+    );
+  },
+
+  renderStep2() {
+    return (
+      <ProjectStructureSection
+        projectTree={ this.state.projectTree } />
+    );
+  },
+
   render() {
     return (
       <div>
         <Masterbar/>
-        <BasicSetupSection
-          updateProjectName={ this.updateProjectName }
-          updateProjectNamespace={ this.updateProjectNamespace }
-          checkTarget={ this.checkTarget }
-          goToNextStep={ this.goToNextStep } />
+        { this.renderStep2() }
         <Footer/>
       </div>
     );

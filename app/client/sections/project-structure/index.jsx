@@ -13,10 +13,11 @@ const BasicSetupSection = React.createClass( {
       <Main>
         <div className="columns">
           <div className="column is-3">
-            <DirectoryTree/>
+            <DirectoryTree
+              tree={ this.props.projectTree } />
           </div>
           <div className="column">
-            <FilePreview/>
+            <FilePreview />
           </div>
         </div>
         <br/>
