@@ -5,6 +5,48 @@ import { InputContainer, Step, TextInput, CheckBox } from 'components/form';
 import { TitleSection, SubtitleSection } from 'components/section';
 import NavigationButtons from 'components/navigation';
 
+const debug = require( 'debug' )( 'app:sections:basic-setup' );
+
+const ScopeSection = React.createClass( {
+  displayName: 'ScopeSection',
+
+  render() {
+    const { title, indexTarget, addScope, removeScope, scopes } = this.props;
+
+    return (
+      <article className="message">
+        <div className="message-header">
+          <strong>{ title }&nbsp;</strong>
+          <a onClick={ addScope.bind( null, indexTarget ) }>
+            <small>más</small>
+          </a>
+        </div>
+        <div className="message-body">
+          {
+            scopes.map( ( scope, indexScope ) =>
+              <p key={ indexScope } className="control has-addons">
+                <input
+                  className="input is-expanded is-medium"
+                  type="text"
+                  placeholder="customer"
+                  value={ scope.value }
+                  onChange={ 'scope.onChange.bind( null, index )' } />
+                <a
+                  onClick={ removeScope.bind( null, indexTarget, indexScope ) }
+                  className={ 'button is-danger is-medium ' + ( indexScope === 0 ? 'is-disabled' : '' ) }>
+                  <span className="icon">
+                    <i className="fa fa-trash-o"></i>
+                  </span>
+                </a>
+              </p>
+            )
+          }
+        </div>
+      </article>
+    );
+  }
+} );
+
 const BasicSetupSection = React.createClass( {
   displayName: 'BasicSetupSection',
 
@@ -13,6 +55,8 @@ const BasicSetupSection = React.createClass( {
   },
 
   render() {
+    debug( 'render' );
+
     return (
       <Main>
         <TitleSection>
@@ -31,7 +75,7 @@ const BasicSetupSection = React.createClass( {
         </Step>
         <Step
           stepNumber="2"
-          title="Establezca un nombre de identificacion"
+          title="Establezca un nombre de identificación"
           description="con este nombre se crearán todas las carpetas y repositorios" >
           <TextInput
             placeholder="proyecto-nuevo"
@@ -42,68 +86,33 @@ const BasicSetupSection = React.createClass( {
           stepNumber="3"
           title="Seleccione los dispositivos a crear">
           <InputContainer>
-            <CheckBox
-              label="Android"
-              onClick={ this.props.checkTarget.bind( null, 'targetAndroidCheckbox' ) }/>
-            <CheckBox
-              label="iOS"
-              onClick={ this.props.checkTarget.bind( null, 'targetIosCheckbox' ) }/>
-            <CheckBox
-              label="Web App"
-              onClick={ this.props.checkTarget.bind( null, 'targetWebCheckbox' ) }/>
-            <CheckBox
-              label="Web Admin"
-              onClick={ this.props.checkTarget.bind( null, 'targetWebCheckbox' ) }/>
+            {
+              this.props.targets.map( ( target, indexTarget ) =>
+                <CheckBox
+                  key={ indexTarget }
+                  label={ target.title }
+                  onClick={ this.props.checkTarget.bind( null, target.namespace ) }/>
+              )
+            }
           </InputContainer>
         </Step>
         <Step
           stepNumber="4"
           title="Ingrese los perfiles por dispositivo"
           description="Por defecto se crea un scope por cada target">
-          <article className="message is-light_">
-            <div className="message-header">
-              <strong>Android&nbsp;</strong>
-              <a>
-                <small>más</small>
-              </a>
-            </div>
-            <div className="message-body">
-              <p className="control has-addons">
-                <input className="input is-expanded is-medium" type="text" placeholder="client"/>
-                <a className="button is-danger is-medium is-disabled">
-                  <span className="icon">
-                    <i className="fa fa-trash-o"></i>
-                  </span>
-                </a>
-              </p>
-              <p className="control has-addons">
-                <input className="input is-expanded is-medium" type="text" placeholder="client"/>
-                <a className="button is-danger is-medium">
-                  <span className="icon">
-                    <i className="fa fa-trash-o"></i>
-                  </span>
-                </a>
-              </p>
-            </div>
-          </article>
-          <article className="message is-light_">
-            <div className="message-header">
-              <strong>iOS&nbsp;</strong>
-              <a>
-                <small>más</small>
-              </a>
-            </div>
-            <div className="message-body">
-              <p className="control has-addons">
-                <input className="input is-expanded is-medium" type="text" placeholder="client"/>
-                <a className="button is-danger is-medium is-disabled">
-                  <span className="icon">
-                    <i className="fa fa-trash-o"></i>
-                  </span>
-                </a>
-              </p>
-            </div>
-          </article>
+          {
+            this.props.targets.map( ( target, indexTarget ) => {
+              return this.props.checkIfTargetSelected( target.namespace )
+              ? <ScopeSection
+                  key={ indexTarget }
+                  indexTarget={ indexTarget }
+                  title={ target.title }
+                  scopes={ target.scopes }
+                  addScope={ this.props.addScope }
+                  removeScope={ this.props.removeScope } />
+              : null
+            } )
+          }
         </Step>
         <br/>
         <NavigationButtons onClick={ this.props.goToNextStep }/>

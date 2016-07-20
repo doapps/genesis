@@ -12,6 +12,37 @@ import GithubTreeStore from 'lib/github-tree/store';
 
 const debug = require( 'debug' )( 'app:sections' );
 
+const targetsData = [
+  {
+    title: 'Android',
+    namespace: 'android',
+    scopes: [
+      { value: 'customer' }
+    ]
+  },
+  {
+    title: 'iOS',
+    namespace: 'ios',
+    scopes: [
+      { value: 'customer' }
+    ]
+  },
+  {
+    title: 'Web App',
+    namespace: 'webapp',
+    scopes: [
+      { value: 'customer' }
+    ]
+  },
+  {
+    title: 'Web Admin',
+    namespace: 'webadmin',
+    scopes: [
+      { value: 'customer' }
+    ]
+  },
+];
+
 const oversteps = [
   'basic-setup',
   'project-structure',
@@ -23,14 +54,30 @@ const Builder = React.createClass( {
   displayName: 'Builder',
 
   getInitialState() {
-    return {
+    return Object.assign( {
       projectName: null,
       projectNamespace: null,
-      targetAndroidCheckbox: false,
-      targetIosCheckbox: false,
-      targetWebCheckbox: false,
-      projectTree: null
-    };
+      projectTree: null,
+      targetsData: this.getTargetsAndScopes()
+    }, this.getTargetStatesForCheckbox() );
+  },
+
+  getTargetStatesForCheckbox() {
+    let states = {};
+
+    targetsData.forEach( target =>
+      states[ this.getCheckboxState( target.namespace ) ] = false
+    );
+
+    return states;
+  },
+
+  getCheckboxState( namespace ) {
+    return `target-${ namespace }-checkbox`;
+  },
+
+  getTargetsAndScopes() {
+    return targetsData;
   },
 
   componentDidMount() {
@@ -73,14 +120,52 @@ const Builder = React.createClass( {
     } );
   },
 
-  checkTarget( target ) {
+  checkTarget( targetNamespace ) {
+    const state = this.getCheckboxState( targetNamespace );
+
     this.setState( {
-      [ target ]: ! this.state[ target ]
+      [ state ]: ! this.state[ state ]
     } );
   },
 
   goToNextStep() {
     debug( 'next step' );
+    debug( this.state );
+  },
+
+  addScope( indexTarget ) {
+    debug( 'indexTarget', indexTarget );
+
+    const targetDataUpdated = Array.from( this.state.targetsData );
+
+    targetDataUpdated[ indexTarget ].scopes.push( {
+      value: 'customer'
+    } );
+
+    debug( 'targetDataUpdated', targetDataUpdated );
+
+    this.setState( {
+      targetsData: targetDataUpdated
+    } );
+  },
+
+  removeScope( indexTarget, indexScope ) {
+    debug( 'indexTarget', indexTarget );
+    debug( 'indexScope', indexScope );
+
+    const targetDataUpdated = Array.from( this.state.targetsData );
+
+    targetDataUpdated[ indexTarget ].scopes.splice( indexScope, 1 );
+
+    debug( 'targetDataUpdated', targetDataUpdated );
+
+    this.setState( {
+      targetsData: targetDataUpdated
+    } );
+  },
+
+  checkIfTargetSelected( namespace ) {
+    return this.state[ this.getCheckboxState( namespace ) ]
   },
 
   renderStep1() {
@@ -88,6 +173,10 @@ const Builder = React.createClass( {
       <BasicSetupSection
         updateProjectName={ this.updateProjectName }
         updateProjectNamespace={ this.updateProjectNamespace }
+        addScope={ this.addScope }
+        removeScope={ this.removeScope }
+        checkIfTargetSelected={ this.checkIfTargetSelected }
+        targets={ this.state.targetsData }
         checkTarget={ this.checkTarget }
         goToNextStep={ this.goToNextStep } />
     );
