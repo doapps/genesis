@@ -8,7 +8,7 @@ const NavigationButtons = React.createClass( {
           <a
             className="button is-dark"
             onClick={ this.props.onClick }>
-            Siguiente
+            Next
           </a>
         <ul>&nbsp;</ul>
       </nav>

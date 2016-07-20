@@ -12,7 +12,7 @@ import GithubTreeStore from 'lib/github-tree/store';
 
 const debug = require( 'debug' )( 'app:sections' );
 
-const steps = [
+const oversteps = [
   'basic-setup',
   'project-structure',
   'integrations-setup',
@@ -29,7 +29,7 @@ const Builder = React.createClass( {
       targetAndroidCheckbox: false,
       targetIosCheckbox: false,
       targetWebCheckbox: false,
-      projectTree: []
+      projectTree: null
     };
   },
 
@@ -100,11 +100,56 @@ const Builder = React.createClass( {
     );
   },
 
+  renderStep3() {
+    return (
+      <IntegrationsSetupSection />
+    );
+  },
+
+  getProjectData() {
+    const data = [
+      {
+        title: 'Nombre del proyecto',
+        value: this.state.projectName
+      },
+      {
+        title: 'Nombre identificador',
+        value: this.state.projectNamespace
+      },
+      {
+        title: 'Dispositivos',
+        value: [ 'ios', 'android' ]
+      },
+      {
+        title: 'Canal en slack',
+        value: this.state.projectNamespace
+      },
+      {
+        title: 'Repositorios',
+        value: [ 'projecto-nuevo', 'prohect-dos' ]
+      }
+    ];
+
+    return data;
+  },
+
+  buildProjectHandler() {
+    debug( 'BUILDING!....' );
+  },
+
+  renderStep4() {
+    return (
+      <BuildProjectSection
+        data={ this.getProjectData() }
+        buildProjectHandler={ this.buildProjectHandler } />
+    );
+  },
+
   render() {
     return (
       <div>
         <Masterbar/>
-        { this.renderStep2() }
+        { this.renderStep1() }
         <Footer/>
       </div>
     );

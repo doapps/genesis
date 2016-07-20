@@ -1,6 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
 
+const debug = require( 'debug' )( 'app:components:form' );
+
 export const InputContainer = ( { children } ) => (
   <div className="control">
     { children }
@@ -12,7 +14,6 @@ export const TextInput = React.createClass( {
 
   getDefaultProps() {
     return {
-      isCorrect: false,
       placeholder: 'New Project'
     }
   },
@@ -52,7 +53,7 @@ export const CheckBox = React.createClass( {
         <input
           type="checkbox"
           { ...this.props } />
-          { this.props.label }
+          &nbsp;{ this.props.label }&nbsp;
       </label>
     );
   }
@@ -99,11 +100,11 @@ export const BuildButton = React.createClass( {
   render() {
     return (
       <div className="hero-buttons">
-        <a className="button is-info is-large">
+        <a onClick={ this.props.onClick } className="button is-info is-large">
           <span className="icon is-medium">
             <i className="fa fa-gears"></i>
           </span>
-          <span>Construir</span>
+          <span>Build</span>
         </a>
       </div>
     );

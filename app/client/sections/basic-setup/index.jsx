@@ -12,8 +12,6 @@ const BasicSetupSection = React.createClass( {
     updateProjectName: React.PropTypes.func
   },
 
-//  getDefaultProps: function() {},
-
   render() {
     return (
       <Main>
@@ -51,9 +49,61 @@ const BasicSetupSection = React.createClass( {
               label="iOS"
               onClick={ this.props.checkTarget.bind( null, 'targetIosCheckbox' ) }/>
             <CheckBox
-              label="Web"
+              label="Web App"
+              onClick={ this.props.checkTarget.bind( null, 'targetWebCheckbox' ) }/>
+            <CheckBox
+              label="Web Admin"
               onClick={ this.props.checkTarget.bind( null, 'targetWebCheckbox' ) }/>
           </InputContainer>
+        </Step>
+        <Step
+          stepNumber="4"
+          title="Ingrese los perfiles por dispositivo"
+          description="Por defecto se crea un scope por cada target">
+          <article className="message is-light_">
+            <div className="message-header">
+              <strong>Android&nbsp;</strong>
+              <a>
+                <small>más</small>
+              </a>
+            </div>
+            <div className="message-body">
+              <p className="control has-addons">
+                <input className="input is-expanded is-medium" type="text" placeholder="client"/>
+                <a className="button is-danger is-medium is-disabled">
+                  <span className="icon">
+                    <i className="fa fa-trash-o"></i>
+                  </span>
+                </a>
+              </p>
+              <p className="control has-addons">
+                <input className="input is-expanded is-medium" type="text" placeholder="client"/>
+                <a className="button is-danger is-medium">
+                  <span className="icon">
+                    <i className="fa fa-trash-o"></i>
+                  </span>
+                </a>
+              </p>
+            </div>
+          </article>
+          <article className="message is-light_">
+            <div className="message-header">
+              <strong>iOS&nbsp;</strong>
+              <a>
+                <small>más</small>
+              </a>
+            </div>
+            <div className="message-body">
+              <p className="control has-addons">
+                <input className="input is-expanded is-medium" type="text" placeholder="client"/>
+                <a className="button is-danger is-medium is-disabled">
+                  <span className="icon">
+                    <i className="fa fa-trash-o"></i>
+                  </span>
+                </a>
+              </p>
+            </div>
+          </article>
         </Step>
         <br/>
         <NavigationButtons onClick={ this.props.goToNextStep }/>

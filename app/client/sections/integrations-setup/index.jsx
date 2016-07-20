@@ -3,9 +3,13 @@ import React from 'react';
 import Main from 'components/main';
 import { TitleSection, SubtitleSection } from 'components/section';
 import NavigationButtons from 'components/navigation';
-import ConnectionCard from 'components/connection-card';
+import SlackIntegration from 'lib/integrations/slack';
+import GitlabIntegration from 'lib/integrations/gitlab';
+import TrelloIntegration from 'lib/integrations/trello';
 
 const IntegrationsSetupSection = React.createClass( {
+  displayName: 'IntegrationsSetupSection',
+
   render() {
     return (
       <Main>
@@ -16,12 +20,12 @@ const IntegrationsSetupSection = React.createClass( {
           Seleccione las <strong>integraciones</strong> de la lista
         </SubtitleSection>
           <div className="columns is-multiline">
-            <ConnectionCard/>
-            <ConnectionCard/>
-            <ConnectionCard/>
+            <SlackIntegration />
+            <GitlabIntegration />
+            <TrelloIntegration />
           </div>
         <br/>
-        <NavigationButtons/>
+        <NavigationButtons />
       </Main>
     );
   }
