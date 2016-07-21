@@ -1,7 +1,7 @@
 'use strict';
 
 var webpack = require( 'webpack' );
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HtmlWebpackPlugin = require( 'html-webpack-plugin' );
 var config = require( './webpack.config.base.js' );
 
 var SaveAssetsJson = require( 'assets-webpack-plugin' );
@@ -16,7 +16,7 @@ config.output = {
   pathInfo: true,
   publicPath: '',
   filename: 'bundle.[hash].min.js',
-  // filename: 'bundle.min.js',
+// filename: 'bundle.min.js',
 };
 
 config.plugins = config.plugins.concat( [
@@ -37,9 +37,7 @@ config.plugins = config.plugins.concat( [
   new HtmlWebpackPlugin( {
     title: 'Genesis',
     filename: 'index.html',
-    minify: {
-      collapseWhitespace: true
-    },
+    minify: { collapseWhitespace: true },
     template: './static-files/index.html'
   } )
 ] );
