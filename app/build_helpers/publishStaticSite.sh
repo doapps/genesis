@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-PROJECT_DIRECTORY="genesis"
+PROJECT_DIRECTORY="app"
 SITE_DIRECTORY="$PROJECT_DIRECTORY-site"
 GITHUB_REPO="git@github.com:doapps/genesis.git"
 GH_PAGES_SITE="http://doapps.github.io/genesis/"
@@ -28,7 +28,7 @@ fi
 
 cd "$PROJECT_DIRECTORY"
 npm run site-build
-open __site__/index.html
+# open __site__/index.html
 cd ../
 
 echo
