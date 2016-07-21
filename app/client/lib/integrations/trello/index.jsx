@@ -15,7 +15,7 @@ const TrelloIntegration = React.createClass( {
     return (
       <ConnectionCard
         title="Trello"
-        iconClass="fa fa-gitlab"
+        iconClass="fa fa-trello"
         description="for scrum"
         isConnected
         onClick={ this.connect } />

@@ -1,4 +1,5 @@
 import React from 'react';
+import find from 'lodash/find';
 
 import Masterbar from 'components/masterbar';
 import Footer from 'components/footer';
@@ -6,9 +7,9 @@ import BasicSetupSection from 'sections/basic-setup';
 import ProjectStructureSection from 'sections/project-structure';
 import IntegrationsSetupSection from 'sections/integrations-setup';
 import BuildProjectSection from 'sections/build-project';
-import { slugify } from 'lib/form-helpers';
 import GithubTreeActions from 'lib/github-tree/actions';
 import GithubTreeStore from 'lib/github-tree/store';
+import { slugify } from 'lib/form-helpers';
 
 const debug = require( 'debug' )( 'app:sections' );
 
@@ -16,38 +17,54 @@ const targetsData = [
   {
     title: 'Android',
     namespace: 'android',
+    selectDefaultSource: [ 'api' ],
+    type: 'list',
     scopes: [
-      { value: 'customer' }
+      { value: 'default' }
     ]
   },
   {
     title: 'iOS',
     namespace: 'ios',
+    selectDefaultSource: [ 'api', 'mail' ],
+    type: 'list',
     scopes: [
-      { value: 'customer' }
+      { value: 'default' }
     ]
   },
   {
-    title: 'Web App',
-    namespace: 'webapp',
+    title: 'Web',
+    namespace: 'web',
+    selectDefaultSource: [ 'api', 'runtime' ],
+    type: 'select',
     scopes: [
-      { value: 'customer' }
+      {
+        value: 'app',
+        title: 'App',
+        defaultSelect: false
+      },
+      {
+        value: 'admin',
+        title: 'Admin',
+        defaultSelect: true
+      }
     ]
-  },
-  {
-    title: 'Web Admin',
-    namespace: 'webadmin',
-    scopes: [
-      { value: 'customer' }
-    ]
-  },
+  }
 ];
 
-const oversteps = [
-  'basic-setup',
-  'project-structure',
-  'integrations-setup',
-  'build-project'
+const backendSources = [
+  {
+    value: 'api',
+    title: 'API'
+  },
+  {
+    value: 'mail',
+    title: 'Mail'
+  },
+  {
+    value: 'runtime',
+    title: 'Runtime'
+  }
 ];
 
 const Builder = React.createClass( {
@@ -55,29 +72,70 @@ const Builder = React.createClass( {
 
   getInitialState() {
     return Object.assign( {
-      projectName: null,
-      projectNamespace: null,
+      projectName: '',
+      projectNamespace: '',
       projectTree: null,
-      targetsData: this.getTargetsAndScopes()
-    }, this.getTargetStatesForCheckbox() );
+      currentStep: 0,
+      targetsData: this.getTargetsAndScopes(),
+      backendSources: this.getBackendSources()
+    },
+    this.getTargetStatesForCheckbox(),
+    this.getScopeStatesForSelect(),
+    this.getBackendSourceStates() );
   },
 
   getTargetStatesForCheckbox() {
     let states = {};
 
-    targetsData.forEach( target =>
+    targetsData.forEach( target => {
       states[ this.getCheckboxState( target.namespace ) ] = false
-    );
+    } );
 
     return states;
   },
 
   getCheckboxState( namespace ) {
-    return `target-${ namespace }-checkbox`;
+    return `item-${ namespace }-checkbox`;
+  },
+
+  getSelectItemState( value ) {
+    return `item-${ value }-select`;
+  },
+
+  getTagItemState( value ) {
+    return `item-${ value }-tag`;
   },
 
   getTargetsAndScopes() {
     return targetsData;
+  },
+
+  getBackendSources() {
+    return backendSources;
+  },
+
+  getScopeStatesForSelect() {
+    let states = {};
+
+    targetsData.forEach( target => {
+      if ( target.type === 'select' ) {
+        target.scopes.forEach( scope => {
+          states[ this.getSelectItemState( scope.value ) ] = scope.defaultSelect
+        } );
+      }
+    } );
+
+    return states;
+  },
+
+  getBackendSourceStates() {
+    let states = {};
+
+    backendSources.forEach( source => {
+      states[ this.getTagItemState( source.value ) ] = false
+    } );
+
+    return states;
   },
 
   componentDidMount() {
@@ -101,11 +159,8 @@ const Builder = React.createClass( {
       projectName: nameText
     };
 
-    if ( ! this.state.projectNamespace ) {
-      const namespaceText = slugify( name );
-
-      newState.projectNamespace = namespaceText;
-    }
+    const namespaceText = slugify( nameText );
+    newState.projectNamespace = namespaceText;
 
     this.setState( newState );
   },
@@ -121,28 +176,23 @@ const Builder = React.createClass( {
   },
 
   checkTarget( targetNamespace ) {
-    const state = this.getCheckboxState( targetNamespace );
+    const checkboxState = this.getCheckboxState( targetNamespace );
+    const selectSource = find( this.state.targetsData, { namespace: targetNamespace } ).selectDefaultSource;
+    const state = {
+      [ checkboxState ]: ! this.state[ checkboxState ]
+    };
 
-    this.setState( {
-      [ state ]: ! this.state[ state ]
-    } );
-  },
+    if ( selectSource && selectSource.length > 0 && ! this.state[ checkboxState ] ) {
+      selectSource.forEach( source => state[ this.getTagItemState( source ) ] = true )
+    }
 
-  goToNextStep() {
-    debug( 'next step' );
-    debug( this.state );
+    this.setState( state );
   },
 
   addScope( indexTarget ) {
-    debug( 'indexTarget', indexTarget );
-
     const targetDataUpdated = Array.from( this.state.targetsData );
 
-    targetDataUpdated[ indexTarget ].scopes.push( {
-      value: 'customer'
-    } );
-
-    debug( 'targetDataUpdated', targetDataUpdated );
+    targetDataUpdated[ indexTarget ].scopes.push( { value: '' } );
 
     this.setState( {
       targetsData: targetDataUpdated
@@ -150,14 +200,19 @@ const Builder = React.createClass( {
   },
 
   removeScope( indexTarget, indexScope ) {
-    debug( 'indexTarget', indexTarget );
-    debug( 'indexScope', indexScope );
-
     const targetDataUpdated = Array.from( this.state.targetsData );
 
     targetDataUpdated[ indexTarget ].scopes.splice( indexScope, 1 );
 
-    debug( 'targetDataUpdated', targetDataUpdated );
+    this.setState( {
+      targetsData: targetDataUpdated
+    } );
+  },
+
+  onChangeScopeValue( indexTarget, indexScope, event ) {
+    const targetDataUpdated = Array.from( this.state.targetsData );
+
+    targetDataUpdated[ indexTarget ].scopes[ indexScope ].value = event.target.value.toLowerCase().trim();
 
     this.setState( {
       targetsData: targetDataUpdated
@@ -165,7 +220,51 @@ const Builder = React.createClass( {
   },
 
   checkIfTargetSelected( namespace ) {
-    return this.state[ this.getCheckboxState( namespace ) ]
+    return this.state[ this.getCheckboxState( namespace ) ];
+  },
+
+  checkIfScopeSelected( value ) {
+    return this.state[ this.getSelectItemState( value ) ];
+  },
+
+  checkIfSourceSelected( value ) {
+    return this.state[ this.getTagItemState( value ) ];
+  },
+
+  checkIfAreSelectedScopes() {
+    let result = false;
+
+    this.state.targetsData.forEach( target => {
+      if ( target.type === 'select' ) {
+        result = target.scopes.some( scope => this.state[ this.getSelectItemState( scope.value ) ] );
+      }
+    } );
+
+    return result;
+  },
+
+  selectScope( value ) {
+    this.setState( {
+      [ this.getSelectItemState( value ) ]: true
+    } );
+  },
+
+  deselectScope( value ) {
+    this.setState( {
+      [ this.getSelectItemState( value ) ]: false
+    } );
+  },
+
+  selectSource( value ) {
+    this.setState( {
+      [ this.getTagItemState( value ) ]: true
+    } );
+  },
+
+  deselectSource( value ) {
+    this.setState( {
+      [ this.getTagItemState( value ) ]: false
+    } );
   },
 
   renderStep1() {
@@ -173,11 +272,22 @@ const Builder = React.createClass( {
       <BasicSetupSection
         updateProjectName={ this.updateProjectName }
         updateProjectNamespace={ this.updateProjectNamespace }
+        projectName={ this.state.projectName }
+        projectNamespace={ this.state.projectNamespace }
         addScope={ this.addScope }
         removeScope={ this.removeScope }
+        onChangeScopeValue={ this.onChangeScopeValue }
         checkIfTargetSelected={ this.checkIfTargetSelected }
+        checkIfScopeSelected={ this.checkIfScopeSelected }
+        selectScope={ this.selectScope }
+        deselectScope={ this.deselectScope }
+        checkIfAreSelectedScopes={ this.checkIfAreSelectedScopes }
         targets={ this.state.targetsData }
         checkTarget={ this.checkTarget }
+        backendSources={ this.state.backendSources }
+        checkIfSourceSelected={ this.checkIfSourceSelected }
+        deselectSource={ this.deselectSource }
+        selectSource={ this.selectSource }
         goToNextStep={ this.goToNextStep } />
     );
   },
@@ -185,37 +295,147 @@ const Builder = React.createClass( {
   renderStep2() {
     return (
       <ProjectStructureSection
-        projectTree={ this.state.projectTree } />
+        projectTree={ this.state.projectTree }
+        goToNextStep={ this.goToNextStep }
+        goToPreviousStep={ this.goToPreviousStep } />
     );
   },
 
   renderStep3() {
     return (
-      <IntegrationsSetupSection />
+      <IntegrationsSetupSection
+        goToNextStep={ this.goToNextStep }
+        goToPreviousStep={ this.goToPreviousStep } />
     );
+  },
+
+  renderStep4() {
+    return (
+      <BuildProjectSection
+        data={ this.getProjectData() }
+        buildProjectHandler={ this.buildProjectHandler }
+        goToPreviousStep={ this.goToPreviousStep } />
+    );
+  },
+
+  getOversteps() { // AE
+    const oversteps = [
+      this.renderStep1, // basic-setup
+      this.renderStep2, // project-structure
+      this.renderStep3, // integrations-setup
+      this.renderStep4  // build-project
+    ];
+
+    return oversteps;
+  },
+
+  getProjectName() {
+    return [ this.state.projectName ];
+  },
+
+  getProjectNamespace() {
+    return [ this.state.projectNamespace ];
+  },
+
+  getAvailableTargets() {
+    let availableTargets = [];
+
+    this.state.targetsData.forEach( target => {
+      if ( this.checkIfTargetSelected( target.namespace ) ) {
+        availableTargets.push( target.title );
+      }
+    } );
+
+    return availableTargets;
+  },
+
+  getSlackChannel() {
+    const channelName = this.state.projectNamespace;
+
+    return [ channelName ];
+  },
+
+  getTrelloBoard() {
+    const boardName = this.state.projectNamespace;
+
+    return [ boardName ];
+  },
+
+  getRepoName( target = false, module = false ) {
+    return `${ this.state.projectNamespace }${ module ? `-${ module }` : '' }${ target ? `-${ target }` : '' }`;
+  },
+
+  /*
+    etaxi-api
+    etaxi-mail
+    etaxi-android
+    etaxi-ios
+    etaxi-app-web
+    etaxi-admin-web
+    etaxi-client-android
+    etaxi-taxidriver-android
+   */
+
+  getRepositories() {
+    const listRepos = [];
+
+    // For targets and scopes
+    this.state.targetsData.forEach( target => {
+      if ( this.checkIfTargetSelected( target.namespace ) ) {
+        let { scopes, type } = find( this.state.targetsData, { namespace: target.namespace } );
+
+        if ( type === 'list' && scopes.length === 1 ) {
+          listRepos.push( this.getRepoName( target.namespace ) );
+        } else if ( type === 'select' ) {
+          scopes.forEach( scope => {
+            debug( 'scope.value', scope.value );
+            this.checkIfScopeSelected( scope.value )
+            ? listRepos.push( this.getRepoName( target.namespace, scope.value ) )
+            : null
+          } );
+        } else {
+          scopes.forEach( scope =>
+            listRepos.push( this.getRepoName( target.namespace, scope.value ) )
+          );
+        }
+      }
+    } );
+
+    // For sources
+    this.state.backendSources.forEach( source => {
+      if ( this.checkIfSourceSelected( source.value ) ) {
+        listRepos.push( this.getRepoName( source.value ) );
+      }
+    } );
+
+    return listRepos;
   },
 
   getProjectData() {
     const data = [
       {
         title: 'Nombre del proyecto',
-        value: this.state.projectName
+        value: this.getProjectName()
       },
       {
         title: 'Nombre identificador',
-        value: this.state.projectNamespace
+        value: this.getProjectNamespace()
       },
       {
         title: 'Dispositivos',
-        value: [ 'ios', 'android' ]
+        value: this.getAvailableTargets()
       },
       {
-        title: 'Canal en slack',
-        value: this.state.projectNamespace
+        title: 'Canal privado en Slack',
+        value: this.getSlackChannel()
       },
       {
-        title: 'Repositorios',
-        value: [ 'projecto-nuevo', 'prohect-dos' ]
+        title: 'Board en Trello',
+        value: this.getTrelloBoard()
+      },
+      {
+        title: 'Repositorios en Gitlab',
+        value: this.getRepositories()
       }
     ];
 
@@ -226,19 +446,31 @@ const Builder = React.createClass( {
     debug( 'BUILDING!....' );
   },
 
-  renderStep4() {
-    return (
-      <BuildProjectSection
-        data={ this.getProjectData() }
-        buildProjectHandler={ this.buildProjectHandler } />
-    );
+  renderCurrentStep() {
+    const { currentStep } = this.state;
+    const oversteps = this.getOversteps();
+    const renderCurrentStepHandler = oversteps[ currentStep ];
+
+    return renderCurrentStepHandler();
+  },
+
+  goToNextStep() {
+    this.setState( {
+      currentStep: this.state.currentStep + 1
+    } );
+  },
+
+  goToPreviousStep() {
+    this.setState( {
+      currentStep: this.state.currentStep - 1
+    } );
   },
 
   render() {
     return (
       <div>
         <Masterbar/>
-        { this.renderStep1() }
+        { this.renderCurrentStep() }
         <Footer/>
       </div>
     );

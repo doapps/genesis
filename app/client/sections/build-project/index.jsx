@@ -2,7 +2,10 @@ import React from 'react';
 
 import Main from 'components/main';
 import { TitleSection, SubtitleSection } from 'components/section';
+import NavigationButtons from 'components/navigation';
 import { BuildButton } from 'components/form';
+
+const debug = require( 'debug' )( 'app:sections:build-project' );
 
 const BuildProjectSection = React.createClass( {
   renderConfirmationText() {
@@ -24,13 +27,14 @@ const BuildProjectSection = React.createClass( {
               <li key={ index_i }>
                 <strong>{ section.title }</strong>
                 <ul>
-                  { ! Array.isArray( section.value ) ? ( section.value = [ section.value ] ) : null }
                   {
-                    section.value.map( ( value, index_j ) =>
-                      <li key={ index_j }>
-                        { value }
-                      </li>
-                    )
+                    section.value.map( ( value, index_j ) => {
+                      return (
+                        <li key={ index_j }>
+                          { value }
+                        </li>
+                      );
+                    } )
                   }
                 </ul>
               </li>
@@ -49,11 +53,13 @@ const BuildProjectSection = React.createClass( {
           Resumen
         </TitleSection>
         <SubtitleSection>
-          A continuacion, se listan los modulos a construir
+          A continuación, se listan los modulos a construir
         </SubtitleSection>
         { this.renderSummary() }
         <BuildButton
           onClick={ this.props.buildProjectHandler } />
+        <NavigationButtons
+          onClickPrevious={ this.props.goToPreviousStep } />
       </Main>
     );
   }

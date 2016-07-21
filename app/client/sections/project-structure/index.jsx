@@ -40,7 +40,9 @@ const BasicSetupSection = React.createClass( {
           </div>
         </div>
         <br/>
-        <NavigationButtons/>
+        <NavigationButtons
+          onClickNext={ this.props.goToNextStep }
+          onClickPrevious={ this.props.goToPreviousStep } />
       </Main>
     );
   }

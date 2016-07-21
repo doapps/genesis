@@ -25,7 +25,9 @@ const IntegrationsSetupSection = React.createClass( {
             <TrelloIntegration />
           </div>
         <br/>
-        <NavigationButtons />
+        <NavigationButtons
+          onClickNext={ this.props.goToNextStep }
+          onClickPrevious={ this.props.goToPreviousStep } />
       </Main>
     );
   }
