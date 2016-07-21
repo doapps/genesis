@@ -1,5 +1,6 @@
 import React from 'react';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 
 import Masterbar from 'components/masterbar';
 import Footer from 'components/footer';
@@ -19,8 +20,9 @@ const targetsData = [
     namespace: 'android',
     selectDefaultSource: [ 'api' ],
     type: 'list',
+    targetSync: 'ios',
     scopes: [
-      { value: 'default' }
+      { value: '' }
     ]
   },
   {
@@ -28,8 +30,9 @@ const targetsData = [
     namespace: 'ios',
     selectDefaultSource: [ 'api', 'mail' ],
     type: 'list',
+    targetSync: 'android',
     scopes: [
-      { value: 'default' }
+      { value: '' }
     ]
   },
   {
@@ -191,8 +194,15 @@ const Builder = React.createClass( {
 
   addScope( indexTarget ) {
     const targetDataUpdated = Array.from( this.state.targetsData );
+    const newScope = { value: '' };
+    let syncTargetIndex;
 
-    targetDataUpdated[ indexTarget ].scopes.push( { value: '' } );
+    targetDataUpdated[ indexTarget ].scopes.push( newScope );
+    syncTargetIndex = findIndex( targetDataUpdated, { namespace: targetDataUpdated[ indexTarget ].targetSync } );
+
+    if ( !!~syncTargetIndex ) {
+      targetDataUpdated[ syncTargetIndex ].scopes.push( newScope );
+    }
 
     this.setState( {
       targetsData: targetDataUpdated
@@ -201,8 +211,15 @@ const Builder = React.createClass( {
 
   removeScope( indexTarget, indexScope ) {
     const targetDataUpdated = Array.from( this.state.targetsData );
+    let syncTargetIndex;
 
     targetDataUpdated[ indexTarget ].scopes.splice( indexScope, 1 );
+
+    syncTargetIndex = findIndex( targetDataUpdated, { namespace: targetDataUpdated[ indexTarget ].targetSync } );
+
+    if ( !!~syncTargetIndex ) {
+      targetDataUpdated[ syncTargetIndex ].scopes.splice( indexScope, 1 );
+    }
 
     this.setState( {
       targetsData: targetDataUpdated
@@ -211,8 +228,15 @@ const Builder = React.createClass( {
 
   onChangeScopeValue( indexTarget, indexScope, event ) {
     const targetDataUpdated = Array.from( this.state.targetsData );
+    const newValue = event.target.value.toLowerCase().trim();
+    let syncTargetIndex;
 
-    targetDataUpdated[ indexTarget ].scopes[ indexScope ].value = event.target.value.toLowerCase().trim();
+    targetDataUpdated[ indexTarget ].scopes[ indexScope ].value = newValue;
+    syncTargetIndex = findIndex( targetDataUpdated, { namespace: targetDataUpdated[ indexTarget ].targetSync } );
+
+    if ( !!~syncTargetIndex ) {
+      targetDataUpdated[ syncTargetIndex ].scopes[ indexScope ].value = newValue;
+    }
 
     this.setState( {
       targetsData: targetDataUpdated
@@ -365,17 +389,6 @@ const Builder = React.createClass( {
     return `${ this.state.projectNamespace }${ module ? `-${ module }` : '' }${ target ? `-${ target }` : '' }`;
   },
 
-  /*
-    etaxi-api
-    etaxi-mail
-    etaxi-android
-    etaxi-ios
-    etaxi-app-web
-    etaxi-admin-web
-    etaxi-client-android
-    etaxi-taxidriver-android
-   */
-
   getRepositories() {
     const listRepos = [];
 
@@ -388,7 +401,6 @@ const Builder = React.createClass( {
           listRepos.push( this.getRepoName( target.namespace ) );
         } else if ( type === 'select' ) {
           scopes.forEach( scope => {
-            debug( 'scope.value', scope.value );
             this.checkIfScopeSelected( scope.value )
             ? listRepos.push( this.getRepoName( target.namespace, scope.value ) )
             : null
