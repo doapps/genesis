@@ -14,6 +14,15 @@ const Landing = React.createClass( {
     debug( 'click login' );
   },
 
+  renderGithubBadges() {
+    return (
+      <span>
+        <iframe src="https://ghbtns.com/github-btn.html?user=doapps&amp;repo=genesis&amp;type=star&amp;count=true&amp;size=large" frameBorder="0" scrolling="0" width="150px" height="30px"></iframe>
+        <iframe src="https://ghbtns.com/github-btn.html?user=doapps&amp;repo=genesis&amp;type=fork&amp;count=false&amp;size=large" frameBorder="0" scrolling="0" width="80px" height="30px"></iframe>
+      </span>
+    );
+  },
+
   renderMainSection() {
     return (
       <section className="hero is-dark is-medium has-text-centered">
@@ -29,8 +38,6 @@ const Landing = React.createClass( {
               <br/>
               <small>for Google Drive</small>
             </h2>
-            <iframe src="https://ghbtns.com/github-btn.html?user=doapps&amp;repo=genesis&amp;type=star&amp;count=true&amp;size=large" frameBorder="0" scrolling="0" width="150px" height="30px"></iframe>
-            <iframe src="https://ghbtns.com/github-btn.html?user=doapps&amp;repo=genesis&amp;type=fork&amp;count=false&amp;size=large" frameBorder="0" scrolling="0" width="80px" height="30px"></iframe>
             <p className="hero-buttons">
               <a
                 id="gdrive-button-login"
