@@ -32,15 +32,11 @@ const Landing = React.createClass( {
             <iframe src="https://ghbtns.com/github-btn.html?user=doapps&amp;repo=genesis&amp;type=star&amp;count=true&amp;size=large" frameBorder="0" scrolling="0" width="150px" height="30px"></iframe>
             <iframe src="https://ghbtns.com/github-btn.html?user=doapps&amp;repo=genesis&amp;type=fork&amp;count=false&amp;size=large" frameBorder="0" scrolling="0" width="80px" height="30px"></iframe>
             <p className="hero-buttons">
-              <button
+              <a
                 id="gdrive-button-login"
-                className="button is-info is-large"
                 onClick={ this.onClickLogin }>
-                <span className="icon">
-                  <i className="fa fa-sign-in"></i>
-                </span>
-                <span>Login</span>
-              </button>
+                <img src="https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png" />
+              </a>
             </p>
           </div>
         </div>
