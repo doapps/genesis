@@ -481,9 +481,9 @@ const Builder = React.createClass( {
   render() {
     return (
       <div>
-        <Masterbar/>
+        <Masterbar currentStep={ this.state.currentStep } />
         { this.renderCurrentStep() }
-        <Footer/>
+        <Footer />
       </div>
     );
   }

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Landing from 'pages/landing';
-import Sections from 'sections';
+
+import App from './app';
 
 ReactDOM.render(
-  React.createElement( Sections, {} ),
+  React.createElement( App, {} ),
   document.getElementById( 'app' )
 );
