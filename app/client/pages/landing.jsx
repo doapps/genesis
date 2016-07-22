@@ -38,6 +38,7 @@ const Landing = React.createClass( {
               <br/>
               <small>for Google Drive</small>
             </h2>
+            <br/>
             <p className="hero-buttons">
               <a
                 id="gdrive-button-login"
