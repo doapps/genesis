@@ -28,7 +28,7 @@ const targetsData = [
   {
     title: 'iOS',
     namespace: 'ios',
-    selectDefaultSource: [ 'api', 'mail' ],
+    selectDefaultSource: [ 'api' ],
     type: 'list',
     targetSync: 'android',
     scopes: [

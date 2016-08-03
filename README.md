@@ -13,15 +13,10 @@ The app will begin asking for the project name, namespace and device targets. Th
 The `app` folder keeps the React based web application. Meanwhile the `project` folder stores the template-structure.
 
 ## Current features
-* none, but you can see the mockups!
+Will be posted soon.
 
 ## Possible future features
-* Custom file from Third Party App creation
-* File creation from template
-* Trello integration
-* In-App file editing
-* Module support
-* Tree directory folding
+There are a RFC file which handle the proposals and comments for change in the building process of the structure.
 
 ## TODO list
 - [x] Main Screens (Mockup)
@@ -29,6 +24,60 @@ The `app` folder keeps the React based web application. Meanwhile the `project` 
 - [ ] Third Party Integrations
 - [ ] Testing
 
+## Development
+
+### Install
+
+Clone repository and run:
+
+```
+npm install
+```
+
+### Requirements
+
+node 5+
+
+### Running the app
+
+```
+npm start
+```
+
+Go to [http://localhost:8080](http://localhost:8080).
+
+### Production
+
+If you want to run the project in production, set the `NODE_ENV` environment variable to `production`.
+
+```
+NODE_ENV=production npm start
+```
+
+Also build the production bundle:
+
+```
+npm run dist
+```
+
+### Tests
+
+```
+npm test
+```
+
+Only run specific tests
+
+```
+npm test -- NotFoundComponent
+```
+
+Coverage
+
+```
+npm test -- --coverage
+```
+
 ## License
-Genesis is distributed under the following license:
-- MIT License
+
+MIT © [DoApps](http://doapps.me)

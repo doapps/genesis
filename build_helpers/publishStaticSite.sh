@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-PROJECT_DIRECTORY="app"
+PROJECT_DIRECTORY="genesis"
 SITE_DIRECTORY="$PROJECT_DIRECTORY-site"
 GITHUB_REPO="git@github.com:doapps/genesis.git"
 GH_PAGES_SITE="http://doapps.github.io/genesis/"
