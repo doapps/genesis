@@ -35,6 +35,7 @@
     "react-dom": "15.2.1",
     "shallowequal": "0.2.2",
     "superagent": "2.1.0",
+    "toml": "2.3.0",
     "velocity-react": "1.1.5",
     "webpack": "1.12.12"
   },

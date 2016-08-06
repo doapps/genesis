@@ -7,10 +7,6 @@ const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 let auth2;
 let element = null;
 
-window.handleGoogleClientLoad = () => {
-  debug( 'handleGoogleClientLoad' );
-};
-
 const metadataFileTable = {
   audio: 'application/vnd.google-apps.audio',
   document: 'application/vnd.google-apps.document',
@@ -28,6 +24,10 @@ const metadataFileTable = {
   unknown: 'application/vnd.google-apps.unknown',
   video: 'application/vnd.google-apps.video'
 };
+
+function requestWrapper( fn ) {
+  window.gapi.client.load( 'drive', 'v3', fn );
+}
 
 function getFolderMetadata( folderName ) {
   return {
@@ -53,8 +53,13 @@ function createFileHandler( fileMetadata ) {
   return request;
 }
 
-function requestWrapper( fn ) {
-  return window.gapi.client.load( 'drive', 'v3', fn() );
+function listFileHandler() {
+  const request = window.gapi.client.drive.files.list( {
+    pageSize: 10,
+    fields: 'nextPageToken, files(id, name)'
+  } );
+
+  return request;
 }
 
 export const prepareAuth = cb => {
@@ -68,11 +73,13 @@ export const prepareAuth = cb => {
     element = document.getElementById( 'gdrive-button-login' );
 
     auth2.attachClickHandler( element, {}, googleUser => {
-      const userData = { // maybe handle this in another scope?
-        id: googleUser.getBasicProfile().getId(),
-        name: googleUser.getBasicProfile().getName(),
-        email: googleUser.getBasicProfile().getEmail(),
-        imageUrl: googleUser.getBasicProfile().getImageUrl()
+      googleUser = googleUser.getBasicProfile();
+
+      const userData = {
+        id: googleUser.getId(),
+        name: googleUser.getName(),
+        email: googleUser.getEmail(),
+        imageUrl: googleUser.getImageUrl()
       };
 
       cb( { authorized: true, ...userData } );
@@ -88,15 +95,13 @@ export const createFolder = ( data, cb ) => {
     const folderMetadata = getFolderMetadata( folderName );
     const request = createFileHandler( folderMetadata );
 
-    request.execute( ( err, file ) => {
-      if ( err ) {
-        cb( err, null );
+    request.execute( resp => {
+      if ( resp.error ) {
+        cb( resp.error, null );
         return;
       }
 
-      debug( 'created', file.id );
-
-      cb( null, file );
+      cb( null, resp );
     } );
   } );
 };
@@ -107,15 +112,23 @@ export const createFile = ( data, cb ) => {
     const fileMetadata = getFileMetadata( folderId, fileName );
     const request = createFileHandler( fileMetadata );
 
-    request.execute( ( err, file ) => {
-      if ( err ) {
-        cb( err, null );
+    request.execute( resp => {
+      if ( resp.error ) {
+        cb( resp.error, null );
         return;
       }
 
-      debug( 'created', file.id );
-
-      cb( null, file );
+      cb( null, resp );
     } );
   } );
 };
+
+export const listFiles = cb => {
+  requestWrapper( () => {
+    const request = listFileHandler();
+
+    request.execute( resp => {
+      cb( resp );
+    } );
+  } );
+}

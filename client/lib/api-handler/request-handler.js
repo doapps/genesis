@@ -16,11 +16,13 @@ export default class RequestHandler {
 
     request.get( urlPath, ( err, res ) => {
       if ( err ) {
-        cb( res.body, null );
+        cb( res, null );
         return;
       }
 
-      cb( null, res.body );
+      debug( 'res', res );
+
+      cb( null, res );
     } );
   }
 

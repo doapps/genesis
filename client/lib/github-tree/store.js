@@ -42,7 +42,7 @@ GithubTreeStore.dispatchToken = Dispatcher.register( payload => {
 
   switch ( action.type ) {
     case 'RECEIVE_REPOSITORY_TREE_SUCCESS':
-      const { tree } = action.data;
+      const { tree } = action.data.body;
       setRepositoryTree( tree );
 
       GithubTreeStore.emitChange();
