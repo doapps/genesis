@@ -1,7 +1,4 @@
 import React from 'react';
-import toml from 'toml';
-
-import BuilderMethods from 'lib/builder-tools';
 
 import ConnectionCard from 'components/connection-card';
 
@@ -12,13 +9,6 @@ const GitlabIntegration = React.createClass( {
 
   connect() {
     debug( 'connect gitlab' );
-
-    BuilderMethods.getTemplates( ( err, content ) => {
-      debug( 'content', content );
-      const result = toml.parse( content.text );
-
-      debug( 'result', result );
-    } );
   },
 
   render() {

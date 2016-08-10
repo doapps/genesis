@@ -9,9 +9,8 @@ const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive';
 // Google App Script Variables
 const SCRIPT_URL_EXECUTION = 'https://script.googleapis.com';
 const SCRIPT_ID = 'MmfSf4AzQaez_YS5SScyV4uV-tPu4-D5Y';
-const SCRIPT_PATH_EXECUTION = `v1/scripts/${ scriptId }:run`;
+const SCRIPT_PATH_EXECUTION = `v1/scripts/${ SCRIPT_ID }:run`;
 const FUNCTION_NAME = 'buildProject';
-
 
 let auth2;
 let element = null;
@@ -57,14 +56,12 @@ export const runScriptBuilder = ( data, cb ) => {
   } );
 
   operation.execute( resp => {
-    debug( 'resp', resp );
-
     if ( resp.error && resp.error.status ) {
-      debug( 'Error calling API: ', res.error );
-      cb( res.error, null );
+      debug( 'Error calling API: ', resp.error );
+      cb( resp.error, null );
     } else if ( resp.error ) {
-      debug( 'Script error:', resp.error.details[ 0 ] );
-      cb( res.error, null );
+      debug( 'Script error: ', resp.error.details[ 0 ] );
+      cb( resp.error, null );
     } else {
       const payload = resp.response.result;
 
@@ -72,45 +69,4 @@ export const runScriptBuilder = ( data, cb ) => {
       cb( null, payload );
     }
   } );
-};
-
-export const executeScript = folderId => {
-  debug('------>', folderId);
-  // const folderId = '0BxTy39Zuq5lLanZpZDFDRkdFZ0k';
-  const request = {
-    'function': 'getFiles',
-    'parameters': folderId,
-     // "devMode": true,
-  };
-
-  const op = gapi.client.request({
-    'root': 'https://script.googleapis.com',
-    'path': 'v1/scripts/' + scriptId + ':run',
-    'method': 'POST',
-    'body': request
-  });
-
-  op.execute(function(resp) {
-    console.log('resp', resp);
-    if (resp.error && resp.error.status) {
-      debug('Error calling API:');
-    } else if (resp.error) {
-      var error = resp.error.details[0];
-      debug('Script error message: ' + error.errorMessage);
-
-      if (error.scriptStackTraceElements) {
-        debug('Script error stacktrace:');
-        for (let i = 0; i < error.scriptStackTraceElements.length; i++) {
-          var trace = error.scriptStackTraceElements[i];
-          debug('\t' + trace.function + ':' + trace.lineNumber);
-        }
-      }
-    } else {
-      var fileList = resp.response.result;
-
-      fileList.forEach(function(file) {
-        debug(file.id + '\t' + file.name);
-      });
-    }
-  });
 };

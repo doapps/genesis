@@ -11,6 +11,7 @@ import BuildProjectSection from 'sections/build-project';
 import GithubTreeActions from 'lib/github-tree/actions';
 import GithubTreeStore from 'lib/github-tree/store';
 import { slugify } from 'lib/form-helpers';
+import BuilderMethods from 'lib/builder-methods';
 
 const debug = require( 'debug' )( 'app:sections' );
 
@@ -68,6 +69,11 @@ const backendSources = [
     value: 'runtime',
     title: 'Runtime'
   }
+];
+
+const macroTargets = [
+  'mobile',
+  'web'
 ];
 
 const Builder = React.createClass( {
@@ -142,7 +148,7 @@ const Builder = React.createClass( {
   },
 
   componentDidMount() {
-    GithubTreeActions.buildRepositoryTree();
+    GithubTreeActions.getAndParseRepositoryTree();
     GithubTreeStore.on( 'change', this.updateProjectTree );
   },
 
@@ -151,7 +157,7 @@ const Builder = React.createClass( {
   },
 
   updateProjectTree() {
-    const tree = GithubTreeStore.getProjectStructure();
+    const tree = GithubTreeStore.getProjectTree();
 
     this.setState( { projectTree: tree } );
   },
@@ -320,6 +326,7 @@ const Builder = React.createClass( {
     return (
       <ProjectStructureSection
         projectTree={ this.state.projectTree }
+        projectNamespace={ this.state.projectNamespace }
         goToNextStep={ this.goToNextStep }
         goToPreviousStep={ this.goToPreviousStep } />
     );
@@ -342,7 +349,7 @@ const Builder = React.createClass( {
     );
   },
 
-  getOversteps() { // AE
+  getOversteps() {
     const oversteps = [
       this.renderStep1, // basic-setup
       this.renderStep2, // project-structure
@@ -455,7 +462,19 @@ const Builder = React.createClass( {
   },
 
   buildProjectHandler() {
-    debug( 'BUILDING!....' );
+    const projectStructure = GithubTreeStore.getProjectStructure();
+    const environment = Object.assign( {}, projectStructure, {
+      projectName: this.state.projectName,
+      projectNamespace: this.state.projectNamespace,
+      scopes: this.getAvailableScopes(),
+      targets: this.getAvailableTargets(),
+      macrotargets: this.getAvailableMacrotargets()
+    } );
+
+    BuilderMethods.buildProject( environment, ( error, payloadResult ) => {
+      debug( 'BUILT!' );
+      debug( 'payloadResult', payloadResult );
+    } );
   },
 
   renderCurrentStep() {

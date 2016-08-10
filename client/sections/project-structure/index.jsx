@@ -20,12 +20,13 @@ const BasicSetupSection = React.createClass( {
   },
 
   render() {
-    const { projectTree } = this.props;
+    let { projectTree, projectNamespace } = this.props;
     let treeComponent;
 
     if ( ! projectTree ) {
       treeComponent = this.renderLoading();
     } else {
+      projectTree = Object.assign( {}, projectTree, { name: projectNamespace } );
       treeComponent = this.renderDirectoryTree( projectTree );
     }
 

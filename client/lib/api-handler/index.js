@@ -2,33 +2,46 @@ import RequestHandler from './request-handler';
 
 const debug = require( 'debug' )( 'app:lib:api-handler' );
 
-// GitHub
 const githubRawContentPath = 'https://raw.githubusercontent.com';
 const githubApiPath = 'https://api.github.com';
-const rootSHA = '2c2a75a5ee5a7385ae1128c99e7e3b2c07d08c65';
 const githubUser = 'doapps';
 const githubRepo = 'dspp';
-const baseInternalsFolder = 'internals';
+const internalsFolder = 'internals';
+const baseFolder = 'base';
 
-const getTreePath = () =>
-  `/repos/${ githubUser }/${ githubRepo }/git/trees/${ rootSHA }?recursive=true`;
+const rootPath = `/repos/${ githubUser }/${ githubRepo }/git/refs`;
+const getTreePath = rootSHA => `/repos/${ githubUser }/${ githubRepo }/git/trees/${ rootSHA }?recursive=true`;
+const getRawPath = ( folderName, path ) => `/${ githubUser }/${ githubRepo }/master/${ folderName }/${ path }`;
+const getInternalsPath = path => getRawPath( internalsFolder, path );
+const getRawContentPath = path => getRawPath( baseFolder, path );
 
-const getBasePath = path =>
-  `/${ githubUser }/${ githubRepo }/master/${ baseInternalsFolder }/${ path }`;
-
-const githubHandler = new RequestHandler( githubApiPath );
+const githubApiHandler = new RequestHandler( githubApiPath );
 const githubRawHandler = new RequestHandler( githubRawContentPath );
 
 const APIHandler = {
-  fetchRepositoryTree( cb ) {
-    githubHandler.get( {
-      path: getTreePath()
+  fetchRepositoryRefs( cb ) {
+    githubApiHandler.get( {
+      path: rootPath
     }, cb );
   },
 
-  fetchContent( path, cb ) {
-    githubRawHandler.get( { path: getBasePath( path ) }, cb, true );
-  }
+  fetchRepositoryTree( sha, cb ) {
+    githubApiHandler.get( {
+      path: getTreePath( sha )
+    }, cb );
+  },
+
+  fetchInternalsContent( path, cb ) {
+    githubRawHandler.getRawText( {
+      path: getInternalsPath( path )
+    }, cb );
+  },
+
+  fetchFileContent( path, cb ) {
+    githubRawHandler.getRawText( {
+      path: getRawContentPath( path )
+    }, cb );
+  },
 };
 
 export default APIHandler;

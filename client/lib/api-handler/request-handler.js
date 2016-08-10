@@ -20,9 +20,20 @@ export default class RequestHandler {
         return;
       }
 
-      debug( 'res', res );
+      cb( null, res.body );
+    } );
+  }
 
-      cb( null, res );
+  getRawText( { path }, cb ) {
+    const urlPath = this.getPath( path );
+
+    request.get( urlPath, ( err, res ) => {
+      if ( err ) {
+        cb( res, null );
+        return;
+      }
+
+      cb( null, res.text );
     } );
   }
 

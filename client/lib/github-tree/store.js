@@ -1,18 +1,30 @@
+import fill from 'lodash/fill';
+import zipObjectDeep from 'lodash/zipObjectDeep';
+
 import Dispatcher from 'lib/dispatcher';
 import emitter from 'lib/mixins/emitter';
 import constructTree from './tree-parser';
 
 const debug = require( 'debug' )( 'app:lib:github-tree:store' );
+let objFolders;
+let listFileBuilders;
 
 const directoryTree = {
-  name: 'dspp-tree',
+  name: 'new-project',
   toggled: true,
   children: []
 };
 
 const GithubTreeStore = {
-  getProjectStructure() {
+  getProjectTree() {
     return directoryTree;
+  },
+
+  getProjectStructure() {
+    return {
+      objFolders,
+      listFileBuilders
+    };
   },
 
   emitChange() {
@@ -31,10 +43,35 @@ function preprocessTree( tree ) {
   } );
 }
 
-function setRepositoryTree( tree ) {
-  tree = preprocessTree( tree );
-  directoryTree.children = tree;
+function parseTreeForRendering( tree ) {
+  const treeForParse = preprocessTree( tree );
+  directoryTree.children = treeForParse;
   constructTree( directoryTree.children );
+}
+
+// parsing process will be made based on README files
+// because all leaf nodes always have a file
+function parseTreeFolders( tree ) {
+  const readmeFile = '/README.md';
+  const listFolders = tree
+    .filter( node => node.type === 'blob' && !!~node.path.indexOf( readmeFile ) ) // only objects with readme
+    .map( node => node.path.slice( 0, node.path.indexOf( readmeFile ) ) ) // cut to path only
+    .map( node => node.replace( /\//g, '.' ) ) // transform '/' to '.'
+    .filter( node => !!~node.indexOf( '.' ) ); // removing standalone folders
+  const arrayFills = fill( Array( listFolders.length ), true );
+  const parsedTree = zipObjectDeep( listFolders, arrayFills );
+
+  return parsedTree;
+}
+
+// parsing process depends on '.toml' files
+function parseFactoryFiles( tree ) {
+  const fileBuilderName = '/files.toml';
+  const listBuilders = tree
+    .filter( node => node.type === 'blob' && !!~node.path.indexOf( fileBuilderName ) ) // only objects with files.toml
+    .map( node => node.path.slice( 0, node.path.indexOf( fileBuilderName ) ) ); // cut to only path
+
+  return listBuilders;
 }
 
 GithubTreeStore.dispatchToken = Dispatcher.register( payload => {
@@ -42,8 +79,10 @@ GithubTreeStore.dispatchToken = Dispatcher.register( payload => {
 
   switch ( action.type ) {
     case 'RECEIVE_REPOSITORY_TREE_SUCCESS':
-      const { tree } = action.data.body;
-      setRepositoryTree( tree );
+      const { tree } = action.data;
+      objFolders = parseTreeFolders( tree );
+      listFileBuilders = parseFactoryFiles( tree );
+      parseTreeForRendering( tree );
 
       GithubTreeStore.emitChange();
       break;
