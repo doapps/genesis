@@ -373,11 +373,19 @@ const Builder = React.createClass( {
 
     this.state.targetsData.forEach( target => {
       if ( this.checkIfTargetSelected( target.namespace ) ) {
-        availableTargets.push( target.title );
+        availableTargets.push( { title: target.title, namespace: target.namespace } );
       }
     } );
 
     return availableTargets;
+  },
+
+  getAvailableMacrotargets() {
+    return [ 'mobile', 'web' ];
+  },
+
+  getAvailableScopes() {
+    return [];
   },
 
   getSlackChannel() {
@@ -442,7 +450,7 @@ const Builder = React.createClass( {
       },
       {
         title: 'Dispositivos',
-        value: this.getAvailableTargets()
+        value: this.getAvailableTargets().filter(node => node.title)
       },
       {
         title: 'Canal privado en Slack',
@@ -467,7 +475,7 @@ const Builder = React.createClass( {
       projectName: this.state.projectName,
       projectNamespace: this.state.projectNamespace,
       scopes: this.getAvailableScopes(),
-      targets: this.getAvailableTargets(),
+      targets: [ 'android', 'ios' ], //this.getAvailableTargets(),
       macrotargets: this.getAvailableMacrotargets()
     } );
 

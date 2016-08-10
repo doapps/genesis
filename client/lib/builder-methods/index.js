@@ -23,7 +23,15 @@ function setGlobalVariables( projectName, projectNamespace ) {
 
 function getTemplatesList( cb ) {
   const path = templatesFilename;
-  APIHandler.fetchInternalsContent( path, cb );
+  APIHandler.fetchInternalsContent( path, ( err, templatesText ) => {
+    if ( err ) {
+      cb( err, null );
+      return;
+    }
+
+    const parsedStructure = toml.parse( templatesText );
+    cb( null, parsedStructure );
+  } );
 }
 
 function getAndParseFileContent( path, cb ) {
@@ -90,7 +98,7 @@ function normalizeFiles( filesStructure, { scopes = [], targets = [], macrotarge
 
           if ( fileProps.body ) {
             for ( let prop in fileProps.body ) {
-              fileBody.body[ prop ] = fileProps.body[ prop ].replace( macrotargetRegex, macrotarget );
+              fileBody[ prop ] = fileProps.body[ prop ].replace( macrotargetRegex, macrotarget );
             }
 
             fileProps.body = fileBody;
@@ -105,7 +113,7 @@ function normalizeFiles( filesStructure, { scopes = [], targets = [], macrotarge
 
           if ( fileProps.body ) {
             for ( let prop in fileProps.body ) {
-              fileBody.body[ prop ] = fileProps.body[ prop ].replace( targetRegex, target );
+              fileBody[ prop ] = fileProps.body[ prop ].replace( targetRegex, target );
             }
 
             fileProps.body = fileBody;
@@ -120,7 +128,7 @@ function normalizeFiles( filesStructure, { scopes = [], targets = [], macrotarge
 
           if ( fileProps.body ) {
             for ( let prop in fileProps.body ) {
-              fileBody.body[ prop ] = fileProps.body[ prop ].replace( scopeRegex, scope );
+              fileBody[ prop ] = fileProps.body[ prop ].replace( scopeRegex, scope );
             }
 
             fileProps.body = fileBody;
@@ -157,17 +165,25 @@ const BuilderMethods = {
       }
 
       middlewareFillGlobals( dataTemplates );
-      debug( 'dataTemplates', dataTemplates );
 
       getAllFileBuilderContents( listFileBuilders, filesStructure => {
         const filesToBuild = normalizeFiles( filesStructure, { scopes, targets, macrotargets } );
+        const ownerFoldersInfo = {
+          rootFolderId: '',
+          templatesFolderId: ''
+        };
+
         const buildParameters = {
           objFolders,
           dataTemplates,
-          filesToBuild
+          filesToBuild,
+          ownerFoldersInfo
         };
 
-        runScriptBuilder( buildParameters, cb );
+        debug( 'buildParameters', buildParameters );
+
+        cb( null, 'yay!' );
+        // runScriptBuilder( buildParameters, cb );
       } );
     } );
   }
