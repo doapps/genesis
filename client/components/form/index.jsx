@@ -2,6 +2,8 @@ import React from 'react';
 import classnames from 'classnames';
 import omit from 'lodash/omit';
 
+import { createPicker } from 'lib/integrations/google-drive';
+
 const debug = require( 'debug' )( 'app:components:form' );
 
 export const InputContainer = ( { children } ) => (
@@ -167,6 +169,76 @@ export const BuildButton = React.createClass( {
           </span>
         </a>
       </div>
+    );
+  }
+} );
+
+export const SelectFolderDrive = React.createClass( {
+  displayName: 'SelectFolderDrive',
+
+  getInitialState() {
+    return {
+      folderName: '',
+    };
+  },
+
+  selectFolder() {
+    const { handleSelection } = this.props;
+
+    createPicker( resp => {
+      const { folderId, folderName } = resp;
+
+      this.setState( { folderName } );
+      handleSelection( folderId );
+    } );
+  },
+
+  render() {
+    const { folderName } = this.state;
+
+    const styleContainer = classnames( {
+      control: true,
+      'has-addons': !! folderName
+    } );
+
+    const styleInput = classnames( {
+      input: true,
+      'is-disabled': true,
+      'is-dark': !! folderName
+    } );
+
+    const styleButton = classnames( {
+      button: true,
+      'is-dark': !! folderName
+    } );
+
+    const buttonText = ! folderName ? 'Seleccionar Carpeta' : 'Cambiar Carpeta';
+    const buttonIcon = ! folderName ? 'fa fa-folder-open' : 'fa fa-folder';
+
+    return (
+      <InputContainer>
+        <p className={ styleContainer }>
+          <a
+            className={ styleButton }
+            onClick={ this.selectFolder }>
+            <span className="icon is-small">
+              <i className={ buttonIcon }></i>
+            </span>
+            <span>
+              { buttonText }
+            </span>
+          </a>
+          {
+            folderName
+            ? <input
+                className={ styleInput }
+                type="text"
+                readOnly
+                value={ folderName }/>
+            : null
+          }
+        </p>
+      </InputContainer>
     );
   }
 } );

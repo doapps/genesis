@@ -87,6 +87,8 @@ const Builder = React.createClass( {
       currentStep: 0,
       buildingProject: false,
       buildingDone: false,
+      rootFolderId: '',
+      templatesFolderId: '',
       targetsData: this.getTargetsAndScopes(),
       backendSources: this.getBackendSources()
     },
@@ -299,6 +301,10 @@ const Builder = React.createClass( {
     } );
   },
 
+  setFolderId( prop, id ) {
+    this.setState( { [ prop ]: id } );
+  },
+
   renderStep1() {
     return (
       <BasicSetupSection
@@ -320,7 +326,9 @@ const Builder = React.createClass( {
         checkIfSourceSelected={ this.checkIfSourceSelected }
         deselectSource={ this.deselectSource }
         selectSource={ this.selectSource }
-        goToNextStep={ this.goToNextStep } />
+        goToNextStep={ this.goToNextStep }
+        setRootFolderId={ this.setFolderId.bind( null, 'rootFolderId' ) }
+        setTemplatesFolderId={ this.setFolderId.bind( null, 'templatesFolderId' ) } />
     );
   },
 
@@ -478,6 +486,8 @@ const Builder = React.createClass( {
     const environment = Object.assign( {}, projectStructure, {
       projectName: this.state.projectName,
       projectNamespace: this.state.projectNamespace,
+      rootFolderId: this.state.rootFolderId,
+      templatesFolderId: this.state.templatesFolderId,
       scopes: this.getAvailableScopes(),
       targets: [ 'android', 'ios' ], //this.getAvailableTargets(),
       macrotargets: this.getAvailableMacrotargets()

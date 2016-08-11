@@ -68,7 +68,7 @@ const Masterbar = React.createClass( {
                 <li>
                   <StepTitle
                     isActive={ currentStep === 1 }
-                    title="Project Structures" />
+                    title="Project Structure" />
                 </li>
                 <li>
                   <StepDivision />

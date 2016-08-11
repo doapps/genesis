@@ -152,6 +152,8 @@ const BuilderMethods = {
       objFolders,
       projectName,
       projectNamespace,
+      rootFolderId,
+      templatesFolderId,
       scopes,
       targets,
       macrotargets,
@@ -169,8 +171,8 @@ const BuilderMethods = {
       getAllFileBuilderContents( listFileBuilders, filesStructure => {
         const filesToBuild = normalizeFiles( filesStructure, { scopes, targets, macrotargets } );
         const ownerFoldersInfo = {
-          rootFolderId: '0BxTy39Zuq5lLTThTQzVyV2x4VHc',
-          templatesFolderId: '0BxTy39Zuq5lLanZpZDFDRkdFZ0k',
+          rootFolderId,
+          templatesFolderId,
           projectNamespace
         };
 

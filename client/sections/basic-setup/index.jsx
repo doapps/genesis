@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Main from 'components/main';
-import { InputContainer, Step, TextInput, CheckBox, Tag } from 'components/form';
+import { InputContainer, Step, TextInput, CheckBox, Tag, SelectFolderDrive } from 'components/form';
 import { TitleSection, SubtitleSection } from 'components/section';
 import NavigationButtons from 'components/navigation';
 import ScopeSection from './scope-section';
@@ -26,7 +26,7 @@ const BasicSetupSection = React.createClass( {
         </SubtitleSection>
         <Step
           stepNumber="1"
-          title="Ingrese el nombre del proyecto">
+          title={ <span>Ingrese el <strong>nombre</strong> del proyecto</span> }>
           <TextInput
             placeholder="Proyecto Nuevo"
             isCorrect={ !! this.props.projectName }
@@ -35,7 +35,7 @@ const BasicSetupSection = React.createClass( {
         </Step>
         <Step
           stepNumber="2"
-          title="El nombre de identificación es el siguiente"
+          title={ <span>El nombre de <strong>identificación</strong> es el siguiente</span> }
           description="con este nombre se crearán todas las carpetas, repositorios, canales y más." >
           <TextInput
             placeholder="proyecto-nuevo"
@@ -45,7 +45,7 @@ const BasicSetupSection = React.createClass( {
         </Step>
         <Step
           stepNumber="3"
-          title="Seleccione los dispositivos">
+          title={ <span>Seleccione los <strong>dispositivos</strong></span> }>
           <InputContainer>
             {
               this.props.targets.map( ( target, indexTarget ) =>
@@ -60,7 +60,7 @@ const BasicSetupSection = React.createClass( {
         </Step>
         <Step
           stepNumber="4"
-          title="Seleccione los módulos backend">
+          title={ <span>Seleccione los <strong>módulos</strong> backend</span> }>
           <InputContainer>
             {
               this.props.backendSources.map( ( source, indexSource ) =>
@@ -76,7 +76,7 @@ const BasicSetupSection = React.createClass( {
         </Step>
         <Step
           stepNumber="5"
-          title="Ingrese las aplicaciones por dispositivo"
+          title={ <span>Ingrese las <strong>aplicaciones</strong> por dispositivo</span> }
           description="Por defecto se crea una aplicación por dispositivo">
           {
             this.props.targets.map( ( target, indexTarget ) => {
@@ -100,33 +100,15 @@ const BasicSetupSection = React.createClass( {
         </Step>
         <Step
           stepNumber="6"
-          title="Seleccione la carpeta raíz"
-          description="En esta carpeta se creará la carpeta <namespace>">
-          <InputContainer>
-            <p className="control has-addons">
-              <a className="button is-outlined">
-                <span className="icon is-small">
-                  <i className="fa fa-folder-open"></i>
-                </span><span>Seleccionar carpeta</span>
-              </a>
-              <input className="input is-disabled is-success_ is-expanded_" type="text" placeholder="Root Folder"/>
-            </p>
-          </InputContainer>
+          title={ <span>Seleccione la <strong>carpeta raíz</strong></span> }
+          description={ <span>Aquí se creará la carpeta <strong>{ this.props.projectNamespace }</strong></span> }>
+          <SelectFolderDrive handleSelection={ this.props.setRootFolderId } />
         </Step>
         <Step
           stepNumber="7"
-          title="Seleccione la carpeta de templates"
+          title={ <span>Seleccione la <strong>carpeta de templates</strong></span> }
           description="Esta carpeta debe contener todos los templates descritos en el dspp">
-          <InputContainer>
-            <p className="control has-addons">
-              <a className="button is-outlined">
-                <span className="icon is-small">
-                  <i className="fa fa-folder-open"></i>
-                </span><span>Seleccionar carpeta</span>
-              </a>
-              <input className="input is-disabled is-success_ is-expanded_" type="text" placeholder="Templates Folder"/>
-            </p>
-          </InputContainer>
+          <SelectFolderDrive handleSelection={ this.props.setTemplatesFolderId } />
         </Step>
         <br/>
         <NavigationButtons

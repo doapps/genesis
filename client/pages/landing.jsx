@@ -25,11 +25,11 @@ const Landing = React.createClass( {
 
   renderMainSection() {
     return (
-      <section className="hero is-dark is-medium has-text-centered">
+      <section className="hero is-light is-medium has-text-centered">
         <div className="hero-body">
           <div className="container">
             <p>
-              <img src="https://raw.githubusercontent.com/doapps/genesis/master/static-files/logo-light.png" alt="Genesis"/>
+              <img src="https://raw.githubusercontent.com/doapps/genesis/master/static-files/logo-dark.png" alt="Genesis"/>
             </p>
             <br/>
             <h1 className="title">Genesis</h1>
