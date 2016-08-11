@@ -169,8 +169,9 @@ const BuilderMethods = {
       getAllFileBuilderContents( listFileBuilders, filesStructure => {
         const filesToBuild = normalizeFiles( filesStructure, { scopes, targets, macrotargets } );
         const ownerFoldersInfo = {
-          rootFolderId: '',
-          templatesFolderId: ''
+          rootFolderId: '0BxTy39Zuq5lLTThTQzVyV2x4VHc',
+          templatesFolderId: '0BxTy39Zuq5lLanZpZDFDRkdFZ0k',
+          projectNamespace
         };
 
         const buildParameters = {

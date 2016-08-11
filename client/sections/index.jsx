@@ -85,6 +85,8 @@ const Builder = React.createClass( {
       projectNamespace: '',
       projectTree: null,
       currentStep: 0,
+      buildingProject: false,
+      buildingDone: false,
       targetsData: this.getTargetsAndScopes(),
       backendSources: this.getBackendSources()
     },
@@ -345,6 +347,8 @@ const Builder = React.createClass( {
       <BuildProjectSection
         data={ this.getProjectData() }
         buildProjectHandler={ this.buildProjectHandler }
+        buildingDone={ this.state.buildingDone }
+        buildingProject={ this.state.buildingProject }
         goToPreviousStep={ this.goToPreviousStep } />
     );
   },
@@ -479,9 +483,15 @@ const Builder = React.createClass( {
       macrotargets: this.getAvailableMacrotargets()
     } );
 
+    this.setState( { buildingProject: true } );
+
     BuilderMethods.buildProject( environment, ( error, payloadResult ) => {
       debug( 'BUILT!' );
       debug( 'payloadResult', payloadResult );
+      this.setState( {
+        buildingDone: true,
+        buildingProject: false
+      } );
     } );
   },
 

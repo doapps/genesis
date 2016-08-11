@@ -47,6 +47,8 @@ const BuildProjectSection = React.createClass( {
   },
 
   render() {
+    const { buildingProject, buildingDone } = this.props;
+
     return (
       <Main>
         <TitleSection>
@@ -57,6 +59,8 @@ const BuildProjectSection = React.createClass( {
         </SubtitleSection>
         { this.renderSummary() }
         <BuildButton
+          isWorkingInProgress={ buildingProject }
+          isWorkingDone={ buildingDone }
           onClick={ this.props.buildProjectHandler } />
         <NavigationButtons
           onClickPrevious={ this.props.goToPreviousStep } />

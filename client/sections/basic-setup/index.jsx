@@ -98,6 +98,13 @@ const BasicSetupSection = React.createClass( {
             } )
           }
         </Step>
+        <Step
+          stepNumber="6"
+          title="Seleccione las carpetas necesarias"
+          description="Será necesario para ubicar el destino del proyecto y de los templates">
+          <button className="button is-big">Root folder</button>
+          <button className="button is-big">Templates folder</button>
+        </Step>
         <br/>
         <NavigationButtons
           onClickNext={ this.props.goToNextStep } />

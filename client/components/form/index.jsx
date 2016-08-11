@@ -141,13 +141,30 @@ export const BuildButton = React.createClass( {
   displayName: 'BuildButton',
 
   render() {
+    const { isWorkingInProgress, isWorkingDone } = this.props;
+    let styleButton = classnames( {
+      button: true,
+      'is-info': ! isWorkingDone,
+      'is-large': true,
+      'is-loading': isWorkingInProgress,
+      'is-disabled': isWorkingInProgress
+    } );
+
+    styleButton = isWorkingDone ? `${ styleButton } is-disabled` : styleButton;
+
     return (
       <div className="hero-buttons">
-        <a onClick={ this.props.onClick } className="button is-info is-large">
+        <a onClick={ this.props.onClick } className={ styleButton }>
           <span className="icon is-medium">
             <i className="fa fa-gears"></i>
           </span>
-          <span>Build</span>
+          <span>
+            {
+              isWorkingDone
+              ? 'Completed'
+              : 'Build'
+            }
+          </span>
         </a>
       </div>
     );

@@ -1,4 +1,3 @@
-import fill from 'lodash/fill';
 import zipObjectDeep from 'lodash/zipObjectDeep';
 
 import Dispatcher from 'lib/dispatcher';
@@ -49,6 +48,25 @@ function parseTreeForRendering( tree ) {
   constructTree( directoryTree.children );
 }
 
+function permute( newObj, obj ) {
+  for ( let prop in obj ) {
+    if ( obj.hasOwnProperty( prop ) ) {
+      if ( typeof obj[ prop ] === 'object' ) {
+        newObj[ prop ] = {};
+        permute( newObj[ prop ], obj[ prop ] );
+      } else {
+        newObj[ prop ] = [];
+      }
+    }
+  }
+}
+
+function changeUndefinedLeafs( obj ) {
+  let newTree = {};
+  permute( newTree, obj );
+  return newTree;
+}
+
 // parsing process will be made based on README files
 // because all leaf nodes always have a file
 function parseTreeFolders( tree ) {
@@ -58,10 +76,11 @@ function parseTreeFolders( tree ) {
     .map( node => node.path.slice( 0, node.path.indexOf( readmeFile ) ) ) // cut to path only
     .map( node => node.replace( /\//g, '.' ) ) // transform '/' to '.'
     .filter( node => !!~node.indexOf( '.' ) ); // removing standalone folders
-  const arrayFills = fill( Array( listFolders.length ), true );
-  const parsedTree = zipObjectDeep( listFolders, arrayFills );
 
-  return parsedTree;
+  const parsedTree = zipObjectDeep( listFolders, null );
+  let filledTree = changeUndefinedLeafs( parsedTree );
+
+  return filledTree;
 }
 
 // parsing process depends on '.toml' files

@@ -45,10 +45,11 @@ export const prepareAuth = cb => {
 export const runScriptBuilder = ( data, cb ) => {
   const request = {
     function: FUNCTION_NAME,
-    parameters: data
+    parameters: data,
+    // devMode: true
   };
 
-  const operation = window.gapi.request( {
+  const operation = window.gapi.client.request( {
     root: SCRIPT_URL_EXECUTION,
     path: SCRIPT_PATH_EXECUTION,
     method: 'POST',
@@ -65,7 +66,6 @@ export const runScriptBuilder = ( data, cb ) => {
     } else {
       const payload = resp.response.result;
 
-      debug( 'API Executed: ', payload );
       cb( null, payload );
     }
   } );
