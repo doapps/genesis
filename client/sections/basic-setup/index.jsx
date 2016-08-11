@@ -100,10 +100,33 @@ const BasicSetupSection = React.createClass( {
         </Step>
         <Step
           stepNumber="6"
-          title="Seleccione las carpetas necesarias"
-          description="Será necesario para ubicar el destino del proyecto y de los templates">
-          <button className="button is-big">Root folder</button>
-          <button className="button is-big">Templates folder</button>
+          title="Seleccione la carpeta raíz"
+          description="En esta carpeta se creará la carpeta <namespace>">
+          <InputContainer>
+            <p className="control has-addons">
+              <a className="button is-outlined">
+                <span className="icon is-small">
+                  <i className="fa fa-folder-open"></i>
+                </span><span>Seleccionar carpeta</span>
+              </a>
+              <input className="input is-disabled is-success_ is-expanded_" type="text" placeholder="Root Folder"/>
+            </p>
+          </InputContainer>
+        </Step>
+        <Step
+          stepNumber="7"
+          title="Seleccione la carpeta de templates"
+          description="Esta carpeta debe contener todos los templates descritos en el dspp">
+          <InputContainer>
+            <p className="control has-addons">
+              <a className="button is-outlined">
+                <span className="icon is-small">
+                  <i className="fa fa-folder-open"></i>
+                </span><span>Seleccionar carpeta</span>
+              </a>
+              <input className="input is-disabled is-success_ is-expanded_" type="text" placeholder="Templates Folder"/>
+            </p>
+          </InputContainer>
         </Step>
         <br/>
         <NavigationButtons
