@@ -189,8 +189,8 @@ const BuilderMethods = {
 
         debug( 'buildParameters', buildParameters );
 
-        cb( null, 'yay!' );
-        // runScriptBuilder( buildParameters, cb );
+        // cb( null, 'yay!' );
+        runScriptBuilder( buildParameters, cb );
       } );
     } );
   }

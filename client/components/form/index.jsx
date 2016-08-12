@@ -27,7 +27,7 @@ export const TextInput = React.createClass( {
     const styleInput = classnames( {
       input: true,
       'is-medium': true,
-      'is-success': isCorrect,
+      'is-dark': isCorrect,
       'is-disabled': isDisabled
     } );
 

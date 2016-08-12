@@ -3,7 +3,10 @@ const debug = require( 'debug' )( 'app:lib:integrations:google-drive' );
 // const GDRIVE_CLIENT_ID = '1004924447672-ib5vtaiimi6h1sqfhq6b6o34iiheb8p8.apps.googleusercontent.com';
 const GDRIVE_CLIENT_ID = '494857266143-s5miocne763456shvqr6nh5q8i4olqin.apps.googleusercontent.com';
 const GDRIVE_COOKIE_POLICY = 'single_host_origin';
-const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive';
+const GDRIVE_SCOPES = [
+  'https://www.googleapis.com/auth/documents',
+  'https://www.googleapis.com/auth/drive'
+];
 // const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive';
 // const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 
@@ -14,7 +17,8 @@ const MIME_TYPE_FOLDER = 'application/vnd.google-apps.folder';
 const SCRIPT_URL_EXECUTION = 'https://script.googleapis.com';
 const SCRIPT_ID = 'MmfSf4AzQaez_YS5SScyV4uV-tPu4-D5Y';
 const SCRIPT_PATH_EXECUTION = `v1/scripts/${ SCRIPT_ID }:run`;
-const FUNCTION_NAME = 'buildProject';
+const FUNCTION_NAME = 'test';
+// const FUNCTION_NAME = 'buildProject';
 
 let auth2;
 let element = null;
@@ -44,7 +48,7 @@ export const prepareAuth = cb => {
     auth2 = window.gapi.auth2.init( {
       client_id: GDRIVE_CLIENT_ID,
       cookiepolicy: GDRIVE_COOKIE_POLICY,
-      scope: GDRIVE_SCOPE
+      scope: GDRIVE_SCOPES.join( ' ' )
     } );
 
     element = document.getElementById( 'gdrive-button-login' );

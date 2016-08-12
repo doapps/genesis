@@ -234,11 +234,8 @@ const Builder = React.createClass( {
 
     targetDataUpdated[ indexTarget ].scopes.splice( indexScope, 1 );
 
-    debug( 'targetDataUpdated', targetDataUpdated );
-    debug( 'indexTarget', indexTarget );
-
-    if ( targetDataUpdated.length === 1 && ! targetDataUpdated[ 0 ] ) {
-      debug( 'vacio' );
+    if ( targetDataUpdated[ indexTarget ].scopes.length === 1 && ! targetDataUpdated[ indexTarget ].scopes[ 0 ].value ) {
+      targetDataUpdated[ indexTarget ].scopes[ 0 ].value = 'default';
     }
 
     syncTargetIndex = findIndex( targetDataUpdated, { namespace: targetDataUpdated[ indexTarget ].targetSync } );
