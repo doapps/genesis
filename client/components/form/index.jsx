@@ -151,14 +151,14 @@ export const BuildButton = React.createClass( {
       'is-loading': isWorkingInProgress,
       'is-disabled': isWorkingInProgress
     } );
-
+    const buttonIcon = isWorkingDone ? 'fa fa-check' : 'fa fa-gears';
     styleButton = isWorkingDone ? `${ styleButton } is-disabled` : styleButton;
 
     return (
       <div className="hero-buttons">
         <a onClick={ this.props.onClick } className={ styleButton }>
           <span className="icon is-medium">
-            <i className="fa fa-gears"></i>
+            <i className={ buttonIcon }></i>
           </span>
           <span>
             {

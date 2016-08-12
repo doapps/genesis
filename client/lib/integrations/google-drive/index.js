@@ -4,6 +4,7 @@ const debug = require( 'debug' )( 'app:lib:integrations:google-drive' );
 const GDRIVE_CLIENT_ID = '494857266143-s5miocne763456shvqr6nh5q8i4olqin.apps.googleusercontent.com';
 const GDRIVE_COOKIE_POLICY = 'single_host_origin';
 const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive';
+// const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive';
 // const GDRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 
 const GDRIVE_API_KEY = 'AIzaSyAv7QK4qvotGd491fBu1iOYqmWmG_5Q9Ig';

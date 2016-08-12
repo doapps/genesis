@@ -14,7 +14,7 @@ const ScopeSection = React.createClass( {
     return scopes.map( ( scope, indexScope ) =>
       <p key={ indexScope } className="control has-addons">
         <input
-          className="input is-expanded is-medium"
+          className={ 'input is-expanded is-medium ' + ( ( scopes.length === 1 && indexScope === 0 ) ? 'is-disabled' : '' ) }
           type="text"
           placeholder="name"
           value={ scope.value }

@@ -1,6 +1,9 @@
 import React from 'react';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
+import pickBy from 'lodash/pickBy';
+import intersection from 'lodash/intersection';
+import keys from 'lodash/keys';
 
 import Masterbar from 'components/masterbar';
 import Footer from 'components/footer';
@@ -10,8 +13,8 @@ import IntegrationsSetupSection from 'sections/integrations-setup';
 import BuildProjectSection from 'sections/build-project';
 import GithubTreeActions from 'lib/github-tree/actions';
 import GithubTreeStore from 'lib/github-tree/store';
-import { slugify } from 'lib/form-helpers';
 import BuilderMethods from 'lib/builder-methods';
+import { slugify } from 'lib/form-helpers';
 
 const debug = require( 'debug' )( 'app:sections' );
 
@@ -23,7 +26,10 @@ const targetsData = [
     type: 'list',
     targetSync: 'ios',
     scopes: [
-      { value: '' }
+      {
+        value: 'default',
+        title: 'Default'
+      }
     ]
   },
   {
@@ -33,7 +39,10 @@ const targetsData = [
     type: 'list',
     targetSync: 'android',
     scopes: [
-      { value: '' }
+      {
+        value: 'default',
+        title: 'Default'
+      }
     ]
   },
   {
@@ -71,10 +80,10 @@ const backendSources = [
   }
 ];
 
-const macroTargets = [
-  'mobile',
-  'web'
-];
+const macroTargets = {
+  mobile: [ 'android', 'ios' ],
+  web: [ 'web' ]
+};
 
 const Builder = React.createClass( {
   displayName: 'Builder',
@@ -224,6 +233,13 @@ const Builder = React.createClass( {
     let syncTargetIndex;
 
     targetDataUpdated[ indexTarget ].scopes.splice( indexScope, 1 );
+
+    debug( 'targetDataUpdated', targetDataUpdated );
+    debug( 'indexTarget', indexTarget );
+
+    if ( targetDataUpdated.length === 1 && ! targetDataUpdated[ 0 ] ) {
+      debug( 'vacio' );
+    }
 
     syncTargetIndex = findIndex( targetDataUpdated, { namespace: targetDataUpdated[ indexTarget ].targetSync } );
 
@@ -389,11 +405,17 @@ const Builder = React.createClass( {
       }
     } );
 
-    return availableTargets;
+    return propFilter => availableTargets.map( prop => prop[ propFilter ] );
   },
 
   getAvailableMacrotargets() {
-    return [ 'mobile', 'web' ];
+    const availableTargets = this.getAvailableTargets()( 'namespace' );
+    const objAvailableMacrotargets = pickBy(
+      macroTargets, targets => intersection( targets, availableTargets ).length
+    );
+    const availableMacrotargets = keys( objAvailableMacrotargets );
+
+    return availableMacrotargets;
   },
 
   getAvailableScopes() {
@@ -462,7 +484,7 @@ const Builder = React.createClass( {
       },
       {
         title: 'Dispositivos',
-        value: this.getAvailableTargets().filter(node => node.title)
+        value: this.getAvailableTargets()( 'title' )
       },
       {
         title: 'Canal privado en Slack',
@@ -489,7 +511,7 @@ const Builder = React.createClass( {
       rootFolderId: this.state.rootFolderId,
       templatesFolderId: this.state.templatesFolderId,
       scopes: this.getAvailableScopes(),
-      targets: [ 'android', 'ios' ], //this.getAvailableTargets(),
+      targets: this.getAvailableTargets()( 'namespace' ),
       macrotargets: this.getAvailableMacrotargets()
     } );
 

@@ -159,6 +159,10 @@ const BuilderMethods = {
       macrotargets,
     } = environment;
 
+    debug( 'scopes', scopes );
+    debug( 'targets', targets );
+    debug( 'macrotargets', macrotargets );
+
     setGlobalVariables( projectName, projectNamespace );
 
     getTemplatesList( ( errTemplates, dataTemplates ) => {
