@@ -37,8 +37,24 @@ config.plugins = config.plugins.concat( [
   new HtmlWebpackPlugin( {
     title: 'Genesis',
     filename: 'index.html',
-    minify: { collapseWhitespace: true },
+    favicon: './static-files/favicon.ico',
+    minify: {
+      collapseWhitespace: true,
+      minifyCSS: true,
+      minifyJS: true,
+    },
     template: './static-files/index.html'
+  } ),
+  new HtmlWebpackPlugin( {
+    title: 'GitLab Login',
+    filename: 'gitlab.html',
+    favicon: './static-files/favicon.ico',
+    minify: {
+      collapseWhitespace: true,
+      minifyCSS: true,
+      minifyJS: true,
+    },
+    template: './static-files/gitlab.html'
   } )
 ] );
 

@@ -1,14 +1,22 @@
 import React from 'react';
 
 import ConnectionCard from 'components/connection-card';
+import openWindow from 'lib/popup-window';
 
 const debug = require( 'debug' )( 'app:lib:integrations:gitlab' );
+
+const popupCallback = str => {
+  debug( 'This is callback: ', str );
+}
+
+window.popupCallback = popupCallback;
 
 const GitlabIntegration = React.createClass( {
   displayName: 'GitlabIntegration',
 
   connect() {
     debug( 'connect gitlab' );
+    openWindow( 'gitlab.html' );
   },
 
   render() {
