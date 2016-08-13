@@ -95,7 +95,7 @@ const Builder = React.createClass( {
       projectTree: null,
       currentStep: 0,
       buildingProject: false,
-      buildingDone: false,
+      buildingDoneURL: '',
       rootFolderId: '',
       templatesFolderId: '',
       targetsData: this.getTargetsAndScopes(),
@@ -368,7 +368,7 @@ const Builder = React.createClass( {
       <BuildProjectSection
         data={ this.getProjectData() }
         buildProjectHandler={ this.buildProjectHandler }
-        buildingDone={ this.state.buildingDone }
+        buildingDoneURL={ this.state.buildingDoneURL }
         buildingProject={ this.state.buildingProject }
         goToPreviousStep={ this.goToPreviousStep } />
     );
@@ -416,7 +416,15 @@ const Builder = React.createClass( {
   },
 
   getAvailableScopes() {
-    return [];
+    let availableScopes = [];
+
+    this.state.targetsData.forEach( target => {
+      if ( this.checkIfTargetSelected( target.namespace ) ) {
+        target.scopes.forEach( scope => availableScopes.push( scope.value ) );
+      }
+    } );
+
+    return availableScopes;
   },
 
   getSlackChannel() {
@@ -517,8 +525,9 @@ const Builder = React.createClass( {
     BuilderMethods.buildProject( environment, ( error, payloadResult ) => {
       debug( 'BUILT!' );
       debug( 'payloadResult', payloadResult );
+      const { folderId } = payloadResult;
       this.setState( {
-        buildingDone: true,
+        buildingDoneURL: folderId,
         buildingProject: false
       } );
     } );

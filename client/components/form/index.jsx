@@ -142,28 +142,38 @@ export const Step = React.createClass( {
 export const BuildButton = React.createClass( {
   displayName: 'BuildButton',
 
+  getRedirectURL( folderId ) {
+    return `https://drive.google.com/drive/folders/${ folderId }`;
+  },
+
   render() {
-    const { isWorkingInProgress, isWorkingDone } = this.props;
+    const { isWorkingInProgress, isWorkingDoneURL } = this.props;
     let styleButton = classnames( {
       button: true,
-      'is-info': ! isWorkingDone,
+      'is-info': ! isWorkingDoneURL,
+      'is-success': isWorkingDoneURL,
       'is-large': true,
       'is-loading': isWorkingInProgress,
       'is-disabled': isWorkingInProgress
     } );
-    const buttonIcon = isWorkingDone ? 'fa fa-check' : 'fa fa-gears';
-    styleButton = isWorkingDone ? `${ styleButton } is-disabled` : styleButton;
+    const redirectURL = isWorkingDoneURL ? this.getRedirectURL( isWorkingDoneURL ) : null;
+    const onClickHandler = ! isWorkingDoneURL ? this.props.onClick : null;
+    const buttonIcon = isWorkingDoneURL ? 'fa fa-check' : 'fa fa-gears';
+    const targetLink = isWorkingDoneURL ? '_blank' : null;
 
     return (
       <div className="hero-buttons">
-        <a onClick={ this.props.onClick } className={ styleButton }>
+        <a href={ redirectURL } target={ targetLink } onClick={ onClickHandler } className={ styleButton }>
           <span className="icon is-medium">
             <i className={ buttonIcon }></i>
           </span>
           <span>
             {
-              isWorkingDone
-              ? 'Completed'
+              isWorkingDoneURL
+              ? <span>
+                  Completado
+                  <small>Click para ir a la carpeta</small>
+                </span>
               : 'Build'
             }
           </span>

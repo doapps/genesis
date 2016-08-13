@@ -47,7 +47,7 @@ const BuildProjectSection = React.createClass( {
   },
 
   render() {
-    const { buildingProject, buildingDone } = this.props;
+    const { buildingProject, buildingDoneURL } = this.props;
 
     return (
       <Main>
@@ -60,7 +60,7 @@ const BuildProjectSection = React.createClass( {
         { this.renderSummary() }
         <BuildButton
           isWorkingInProgress={ buildingProject }
-          isWorkingDone={ buildingDone }
+          isWorkingDoneURL={ buildingDoneURL }
           onClick={ this.props.buildProjectHandler } />
         <NavigationButtons
           onClickPrevious={ this.props.goToPreviousStep } />

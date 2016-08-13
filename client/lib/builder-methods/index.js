@@ -123,8 +123,17 @@ function normalizeFiles( filesStructure, { scopes = [], targets = [], macrotarge
         } );
       } else if ( scopeRegex.test( file ) ) {
         scopes.forEach( scope => {
-          const newFilename = file.replace( scopeRegex, scope );
-          let fileBody = Object.assign( {}, fileProps.body );
+          let newFilename, fileBody;
+
+          if ( scopes.length === 1 ) {
+            // this temporal workaround manages
+            // "requirements.<scope>" but not "requirements.<scope>.body"
+            newFilename = file.replace( scopeRegex, '' ).slice( 0, - 1 );
+          } else {
+            newFilename = file.replace( scopeRegex, scope );
+          }
+
+          fileBody = Object.assign( {}, fileProps.body );
 
           if ( fileProps.body ) {
             for ( let prop in fileProps.body ) {
@@ -189,7 +198,7 @@ const BuilderMethods = {
 
         debug( 'buildParameters', buildParameters );
 
-        // cb( null, 'yay!' );
+        // cb( null, { folderId: 'folderId' } );
         runScriptBuilder( buildParameters, cb );
       } );
     } );

@@ -17,8 +17,8 @@ const MIME_TYPE_FOLDER = 'application/vnd.google-apps.folder';
 const SCRIPT_URL_EXECUTION = 'https://script.googleapis.com';
 const SCRIPT_ID = 'MmfSf4AzQaez_YS5SScyV4uV-tPu4-D5Y';
 const SCRIPT_PATH_EXECUTION = `v1/scripts/${ SCRIPT_ID }:run`;
-const FUNCTION_NAME = 'test';
-// const FUNCTION_NAME = 'buildProject';
+const FUNCTION_NAME = 'buildProject';
+// const FUNCTION_NAME = 'test';
 
 let auth2;
 let element = null;
