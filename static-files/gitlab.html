@@ -109,8 +109,8 @@
 
       function responseParentWindow( data ) {
         console.log( data );
-        // window.opener.popupCallback( data );
-        // window.close();
+        window.opener.popupCallback( data );
+        window.close();
       }
 
       function showErrorMessage( message ) {
@@ -148,7 +148,7 @@
       function handleLogin( err, payload ) {
         if ( err ) {
           showErrorMessage( 'Error, Bad credentials' );
-          responseParentWindow( { status: 401 } );
+          // responseParentWindow( { status: 401 } );
           return;
         }
 

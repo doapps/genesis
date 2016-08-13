@@ -7,15 +7,17 @@ import PopupWindowActions from 'lib/popup-window/actions';
 const debug = require( 'debug' )( 'app:lib:integrations:gitlab' );
 
 const gitlabWindowFile = 'gitlab.html';
-
-const popupCallback = str => {
-  debug( 'This is callback: ', str );
-}
-
-window.popupCallback = popupCallback;
+let tokenGitlab;
 
 const GitlabIntegration = React.createClass( {
   displayName: 'GitlabIntegration',
+
+  getInitialState() {
+    return {
+      isConnected: false,
+      infoLogged: ''
+    }
+  },
 
   componentDidMount() {
     PopupWindowStore.on( 'change', this.gitlabWindowHandler );
@@ -27,11 +29,22 @@ const GitlabIntegration = React.createClass( {
 
   gitlabWindowHandler() {
     const payload = PopupWindowStore.getPopupResponse();
+    tokenGitlab = payload.token;
+
+    debug( 'payload', payload );
+
+    if ( tokenGitlab ) {
+      this.setState( {
+        isConnected: true,
+        infoLogged: payload.name
+      } );
+    }
   },
 
   connect() {
     debug( 'connect gitlab' );
-    PopupWindowActions.openWindow( gitlabWindowFile );
+    PopupWindowActions.openWindowPopup( gitlabWindowFile );
+    // this.setState( { isConnected: true, infoLogged: 'jc' } );
   },
 
   render() {
@@ -40,6 +53,8 @@ const GitlabIntegration = React.createClass( {
         title="Gitlab"
         iconClass="fa fa-gitlab"
         description="for repos"
+        infoLogged={ this.state.infoLogged }
+        isConnected={ this.state.isConnected }
         onClick={ this.connect } />
     );
   }

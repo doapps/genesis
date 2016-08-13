@@ -19,11 +19,9 @@ const IntegrationsSetupSection = React.createClass( {
         <SubtitleSection>
           Seleccione las <strong>integraciones</strong> de la lista
         </SubtitleSection>
-          <div className="columns is-multiline">
-            <SlackIntegration />
-            <GitlabIntegration />
-            <TrelloIntegration />
-          </div>
+          <SlackIntegration />
+          <GitlabIntegration />
+          <TrelloIntegration />
         <br/>
         <NavigationButtons
           onClickNext={ this.props.goToNextStep }

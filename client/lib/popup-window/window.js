@@ -21,7 +21,7 @@ function createPopUp( url, title, width, height ) {
   return newWindow;
 }
 
-function openWindow( url, title ) {
+function openWindow( url, title = '' ) {
   return createPopUp( url, title, '430', '430' );
 }
 
