@@ -8,17 +8,19 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/2.1.0/superagent.min.js"></script>
   <style type="text/css">
     * {
-    box-sizing: border-box;
+      box-sizing: border-box;
     }
 
     *:focus {
       outline: none;
     }
+
     body {
       font-family: 'Source Sans Pro', sans-serif;
       background-color: #fc6d26;
       padding: 50px;
     }
+
     .login {
       width: 300px;
       position: absolute;
@@ -27,6 +29,7 @@
       margin-left: auto;
       margin-right: auto;
     }
+
     .login-screen {
       background-color: #FFF;
       padding: 20px;
@@ -46,6 +49,7 @@
     .login-form {
       text-align: center;
     }
+
     .control-group {
       margin-bottom: 10px;
     }
@@ -143,7 +147,7 @@
 
       function handleLogin( err, payload ) {
         if ( err ) {
-          showErrorMessage( 'Error de credenciales' );
+          showErrorMessage( 'Error, Bad credentials' );
           responseParentWindow( { status: 401 } );
           return;
         }
@@ -170,7 +174,7 @@
         var result = false;
 
         if ( ! ( username && password ) ) {
-          showErrorMessage( 'Ingrese los campos' );
+          showErrorMessage( 'Please, fill the blank fields' );
           result = true;
         }
 

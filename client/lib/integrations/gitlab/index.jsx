@@ -1,9 +1,12 @@
 import React from 'react';
 
 import ConnectionCard from 'components/connection-card';
-import openWindow from 'lib/popup-window';
+import PopupWindowStore from 'lib/popup-window/store';
+import PopupWindowActions from 'lib/popup-window/actions';
 
 const debug = require( 'debug' )( 'app:lib:integrations:gitlab' );
+
+const gitlabWindowFile = 'gitlab.html';
 
 const popupCallback = str => {
   debug( 'This is callback: ', str );
@@ -14,9 +17,21 @@ window.popupCallback = popupCallback;
 const GitlabIntegration = React.createClass( {
   displayName: 'GitlabIntegration',
 
+  componentDidMount() {
+    PopupWindowStore.on( 'change', this.gitlabWindowHandler );
+  },
+
+  componentWillUnmount() {
+    PopupWindowStore.removeListener( 'change', this.gitlabWindowHandler );
+  },
+
+  gitlabWindowHandler() {
+    const payload = PopupWindowStore.getPopupResponse();
+  },
+
   connect() {
     debug( 'connect gitlab' );
-    openWindow( 'gitlab.html' );
+    PopupWindowActions.openWindow( gitlabWindowFile );
   },
 
   render() {
