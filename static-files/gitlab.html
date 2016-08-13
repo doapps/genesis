@@ -3,6 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Gitlab Login</title>
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/2.1.0/superagent.min.js"></script>
   <style type="text/css">
@@ -14,7 +15,7 @@
       outline: none;
     }
     body {
-      font-family: "Source Sans Pro";
+      font-family: 'Source Sans Pro', sans-serif;
       background-color: #fc6d26;
       padding: 50px;
     }
@@ -82,6 +83,7 @@
       border: 1px solid #548;
       background-color: #fff;
       color: #548;
+      cursor: pointer;
       font-weight: 600;
     }
 
@@ -90,7 +92,7 @@
       color: #fff;
     }
 
-    .login-link {
+    .login-message {
       font-size: 12px;
       color: red;
       display: block;
@@ -99,24 +101,98 @@
   </style>
   <script type="text/javascript">
     $( document ).ready( function() {
-
       var URL = 'https://gitlab.com/api/v3';
 
-      function loginGitlab( username, password ) {
+      function responseParentWindow( data ) {
+        console.log( data );
+        // window.opener.popupCallback( data );
+        // window.close();
+      }
+
+      function showErrorMessage( message ) {
+        $( '#invalid-text' ).html( '<span class="login-message">' + message + '</span>' );
+      }
+
+      function cleanErrorMessage() {
+        $( '#invalid-text' ).html( '' );
+      }
+
+      function loginGitlab( username, password, cb ) {
         superagent
           .post( URL + '/session' )
           .query( { login: username } )
           .query( { password: password } )
           .end( function( err, res ) {
+            if ( err ) {
+              console.log( 'err', err );
+              cb( err, null );
+              return;
+            }
 
+            var body = res.body;
+            var payload = {
+              token: body.private_token,
+              avatar: body.avatar_url,
+              email: body.email,
+              name: body.name
+            };
+
+            cb( null, payload );
           } );
       }
 
+      function handleLogin( err, payload ) {
+        if ( err ) {
+          showErrorMessage( 'Error de credenciales' );
+          responseParentWindow( { status: 401 } );
+          return;
+        }
+
+        responseParentWindow( { status: 200, data: payload } );
+      }
+
+      function submitLogin() {
+        var username = $( '#login-username' ).val();
+        var password = $( '#login-password' ).val();
+
+        loginGitlab( username, password, handleLogin );
+      }
+
       $( '#login-button' ).click( function() {
-        window.opener.popupCallback('pop some data');
-        window.close();
+        if ( ! emptyFields() ) {
+          submitLogin();
+        }
       } );
 
+      function emptyFields() {
+        var username = $( '#login-username' ).val();
+        var password = $( '#login-password' ).val();
+        var result = false;
+
+        if ( ! ( username && password ) ) {
+          showErrorMessage( 'Ingrese los campos' );
+          result = true;
+        }
+
+        return result;
+      }
+
+      $( 'input' ).keypress( function( event ) {
+          if ( event.which === 13 ) {
+            event.preventDefault();
+            if ( ! emptyFields() ) {
+              submitLogin();
+            }
+          }
+      } );
+
+      $( '#login-username' ).on( 'change paste keydown focusin', function() {
+        cleanErrorMessage();
+      } );
+
+      $( '#login-password' ).on( 'change paste keydown focusin', function() {
+        cleanErrorMessage();
+      } );
     } );
   </script>
 </head>
@@ -139,15 +215,15 @@
       </div>
       <div class="login-form">
         <div class="control-group">
-        <input type="email" class="login-field" value="" placeholder="Username" id="login-name">
-        <label class="login-field-icon fui-user" for="login-name"></label>
+        <input type="email" class="login-field" value="" placeholder="Username or Email" id="login-username">
+        <label class="login-field-icon fui-user" for="login-username"></label>
         </div>
         <div class="control-group">
-        <input type="password" class="login-field" value="" placeholder="Password" id="login-pass">
-        <label class="login-field-icon fui-lock" for="login-pass"></label>
+        <input type="password" class="login-field" value="" placeholder="Password" id="login-password">
+        <label class="login-field-icon fui-lock" for="login-password"></label>
         </div>
         <button class="btn btn-primary btn-large btn-block" id="login-button">Login</button>
-        <span class="login-link" href="#">Bad credentials</span>
+        <div id="invalid-text"></div>
       </div>
     </div>
   </div>
