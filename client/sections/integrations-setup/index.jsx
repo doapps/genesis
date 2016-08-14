@@ -20,7 +20,9 @@ const IntegrationsSetupSection = React.createClass( {
           Seleccione las <strong>integraciones</strong> de la lista
         </SubtitleSection>
           <SlackIntegration />
-          <GitlabIntegration />
+          <GitlabIntegration
+            handleCrendentials={ this.props.handleCrendentials }
+            credentials={ this.props.gitlabCredentials } />
           <TrelloIntegration />
         <br/>
         <NavigationButtons

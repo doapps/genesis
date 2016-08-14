@@ -126,7 +126,7 @@ function normalizeFiles( filesStructure, { scopes = [], targets = [], macrotarge
           let newFilename, fileBody;
 
           if ( scopes.length === 1 ) {
-            // this temporal workaround manages
+            // this temporal workaround resolve
             // "requirements.<scope>" but not "requirements.<scope>.body"
             newFilename = file.replace( scopeRegex, '' ).slice( 0, - 1 );
           } else {
@@ -154,6 +154,51 @@ function normalizeFiles( filesStructure, { scopes = [], targets = [], macrotarge
   return normalizedFiles;
 }
 
+function createBranches( token, projectId ) {
+  const listBranches = [ 'development', 'release', 'hotfix' ];
+
+  // TODO: make it run in async series
+  listBranches.forEach( branch => {
+    APIHandler.createBranchOnProject( token, projectId, branch, ( err, branchData ) => {
+      if ( err ) {
+        debug( 'err', err );
+      }
+    } );
+  } );
+}
+
+const getInitialReadme = projectName => ```
+# ${ projectName }
+New project content
+
+## Licence
+DoApps
+```;
+
+function buildRepositories( token, repositories = [] ) {
+  // TODO: make it run in async series
+  repositories.forEach( repository => {
+    APIHandler.createNewRepository( token, repository, ( err, repoData ) => {
+      if ( err ) {
+        debug( 'err', err );
+      }
+
+      const { id: projectId } = repoData;
+      const filePath = 'README.md';
+      const branchName = 'master';
+      const content = getInitialReadme( repository );
+      const commitMessage = 'initial commit';
+      APIHandler.createFileOnBranch( token, projectId, filePath, branchName, content, commitMessage, ( errNewFile ) => {
+        if ( errNewFile ) {
+          debug( 'errNewFile', errNewFile );
+        }
+
+        createBranches( token, projectId /*, () => { next() }*/ );
+      } );
+    } );
+  } );
+}
+
 const BuilderMethods = {
   buildProject( environment, cb ) {
     const {
@@ -166,12 +211,8 @@ const BuilderMethods = {
       scopes,
       targets,
       macrotargets,
+      repositories
     } = environment;
-
-    debug( 'scopes', scopes );
-    debug( 'targets', targets );
-    debug( 'macrotargets', macrotargets );
-
     setGlobalVariables( projectName, projectNamespace );
 
     getTemplatesList( ( errTemplates, dataTemplates ) => {

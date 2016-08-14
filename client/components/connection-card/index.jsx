@@ -33,7 +33,7 @@ const ConnectionCard = React.createClass( {
   },
 
   renderTagInfoConnected() {
-    const infoText = `Logged as ${ this.props.infoLogged }`;
+    const infoText = `Logged as ${ this.props.infoLogged.username }`;
 
     return (
       <span className="tag is-dark is-medium">
@@ -48,7 +48,7 @@ const ConnectionCard = React.createClass( {
       title,
       description,
       iconClass,
-      isConnected
+      infoLogged
     } = this.props;
 
     return (
@@ -68,7 +68,7 @@ const ConnectionCard = React.createClass( {
               </div>
               <div className="media-right">
                 {
-                  isConnected
+                  infoLogged
                   ? this.renderTagInfoConnected()
                   : this.renderButtonConnect()
                 }

@@ -26,3 +26,15 @@ function openWindow( url, title = '' ) {
 }
 
 export default openWindow;
+
+/*
+var child = window.open('http://google.com','','toolbar=0,status=0,width=626,height=436');
+var timer = setInterval(checkChild, 500);
+
+function checkChild() {
+    if (child.closed) {
+        alert("Child window closed");
+        clearInterval(timer);
+    }
+}
+ */

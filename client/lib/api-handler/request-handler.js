@@ -37,12 +37,14 @@ export default class RequestHandler {
     } );
   }
 
-  post( { path, body = {} }, cb ) {
+  post( { path, body = {}, query = {}, headers = {} }, cb ) {
     const urlPath = this.getPath( path );
 
     request
       .post( urlPath )
       .send( body )
+      .query( query )
+      .set( headers )
       .end( ( err, res ) => {
         if ( err ) {
           cb( res.body, null );

@@ -2,6 +2,7 @@ import RequestHandler from './request-handler';
 
 const debug = require( 'debug' )( 'app:lib:api-handler' );
 
+// GitHub
 const githubRawContentPath = 'https://raw.githubusercontent.com';
 const githubApiPath = 'https://api.github.com';
 const githubUser = 'doapps';
@@ -17,6 +18,10 @@ const getRawContentPath = path => getRawPath( baseFolder, path );
 
 const githubApiHandler = new RequestHandler( githubApiPath );
 const githubRawHandler = new RequestHandler( githubRawContentPath );
+
+// GitLab
+const gitlabPath = 'https://gitlab.com/api/v3';
+const gitlabHandler = new RequestHandler( gitlabPath );
 
 const APIHandler = {
   fetchRepositoryRefs( cb ) {
@@ -42,6 +47,37 @@ const APIHandler = {
       path: getRawContentPath( path )
     }, cb );
   },
+
+  // It'd be better to handle this in another file with closures
+  createNewRepository( token, projectName, cb ) {
+    gitlabHandler.post( {
+      path: '/projects',
+      query: { name: projectName },
+      headers: { 'PRIVATE-TOKEN': token }
+    }, cb );
+  },
+
+  createBranchOnProject( token, projectId, branchName, cb ) {
+    gitlabHandler.post( {
+      path: `/projects/${ projectId }/repository/branches`,
+      query: { branch_name: branchName, ref: 'master' },
+      headers: { 'PRIVATE-TOKEN': token }
+    }, cb );
+  },
+
+  createFileOnBranch( token, projectId, filePath, branchName, content, commitMessage, cb ) {
+    gitlabHandler.post( {
+      path: `/projects/${ projectId }/repository/files`,
+      query: {
+        file_path: filePath,
+        branch_name: branchName,
+        content: window.btoa( content ),
+        encode: 'base64',
+        commit_message: window.encodeURI( commitMessage )
+      },
+      headers: { 'PRIVATE-TOKEN': token }
+    }, cb );
+  }
 };
 
 export default APIHandler;

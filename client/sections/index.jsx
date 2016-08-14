@@ -98,6 +98,7 @@ const Builder = React.createClass( {
       buildingDoneURL: '',
       rootFolderId: '',
       templatesFolderId: '',
+      gitlabCredentials: null,
       targetsData: this.getTargetsAndScopes(),
       backendSources: this.getBackendSources()
     },
@@ -359,7 +360,9 @@ const Builder = React.createClass( {
     return (
       <IntegrationsSetupSection
         goToNextStep={ this.goToNextStep }
-        goToPreviousStep={ this.goToPreviousStep } />
+        goToPreviousStep={ this.goToPreviousStep }
+        handleCrendentials={ this.handleCrendentials.bind( null, 'gitlabCredentials' ) }
+        gitlabCredentials={ this.state.gitlabCredentials } />
     );
   },
 
@@ -372,6 +375,10 @@ const Builder = React.createClass( {
         buildingProject={ this.state.buildingProject }
         goToPreviousStep={ this.goToPreviousStep } />
     );
+  },
+
+  handleCrendentials( prop, data ) {
+    this.setState( { [ prop ]: data } );
   },
 
   getOversteps() {
@@ -517,15 +524,16 @@ const Builder = React.createClass( {
       templatesFolderId: this.state.templatesFolderId,
       scopes: this.getAvailableScopes(),
       targets: this.getAvailableTargets()( 'namespace' ),
-      macrotargets: this.getAvailableMacrotargets()
+      macrotargets: this.getAvailableMacrotargets(),
+      repositories: this.getRepositories()
     } );
 
     this.setState( { buildingProject: true } );
 
     BuilderMethods.buildProject( environment, ( error, payloadResult ) => {
-      debug( 'BUILT!' );
       debug( 'payloadResult', payloadResult );
       const { folderId } = payloadResult;
+
       this.setState( {
         buildingDoneURL: folderId,
         buildingProject: false
