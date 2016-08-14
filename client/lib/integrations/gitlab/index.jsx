@@ -26,10 +26,7 @@ const GitlabIntegration = React.createClass( {
     debug( 'payload', payload );
 
     if ( tokenGitlab ) {
-      this.props.handleCrendentials( {
-        username: payload.name,
-        token: tokenGitlab
-      } );
+      this.props.handleCrendentials( payload.name, tokenGitlab );
     }
   },
 
@@ -53,14 +50,3 @@ const GitlabIntegration = React.createClass( {
 } );
 
 export default GitlabIntegration;
-
-/*
-  curl -X POST "https://gitlab.com/api/v3/session?login=123&password=123
-
-  curl --header "PRIVATE-TOKEN: t0k3n" -X POST "https://gitlab.com/api/v3/projects?name=nuevoproject"
-  curl -X POST -H 'PRIVATE-TOKEN: t0k3n' 'https://gitlab.com/api/v3/projects/:id/repository/files?file_path=README.md&branch_name=master&content=namespace&commit_message=initial%20commit'
-  "https://gitlab.example.com/api/v3/projects/5/repository/branches?branch_name=newbranch&ref=master"
-
-  JkUQ5Erv6vwMfTutX6VY
-  1516822
- */

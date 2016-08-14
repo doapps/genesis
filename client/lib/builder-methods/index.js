@@ -1,7 +1,9 @@
-import async from 'async';
+import each from 'async/each';
+import parallel from 'async/parallel';
 import toml from 'toml';
 
 import APIHandler from 'lib/api-handler';
+import buildRepositories from 'lib/integrations/gitlab/builder';
 import { runScriptBuilder } from 'lib/integrations/google-drive';
 
 const debug = require( 'debug' )( 'app:lib:builder-methods' );
@@ -50,7 +52,7 @@ function getAndParseFileContent( path, cb ) {
 function getAllFileBuilderContents( listFileBuilders, cb ) {
   const builderFilesStructure = {};
 
-  async.forEachSeries( listFileBuilders, ( folderPath, next ) => {
+  each( listFileBuilders, ( folderPath, next ) => {
     const filePath = `${ folderPath }/files.toml`;
     getAndParseFileContent( filePath, ( error, data ) => {
       if ( error ) {
@@ -154,47 +156,47 @@ function normalizeFiles( filesStructure, { scopes = [], targets = [], macrotarge
   return normalizedFiles;
 }
 
-function createBranches( token, projectId ) {
-  const listBranches = [ 'development', 'release', 'hotfix' ];
+function buildProjectStructure( environment, cb ) {
+  const {
+    listFileBuilders,
+    objFolders,
+    projectNamespace,
+    rootFolderId,
+    templatesFolderId,
+    scopes,
+    targets,
+    macrotargets
+  } = environment;
 
-  // TODO: make it run in async series
-  listBranches.forEach( branch => {
-    APIHandler.createBranchOnProject( token, projectId, branch, ( err, branchData ) => {
-      if ( err ) {
-        debug( 'err', err );
-      }
-    } );
-  } );
-}
+  getTemplatesList( ( errTemplates, dataTemplates ) => {
+    if ( errTemplates ) {
+      debug( 'errTemplates', errTemplates );
+    }
 
-const getInitialReadme = projectName => ```
-# ${ projectName }
-New project content
+    middlewareFillGlobals( dataTemplates );
 
-## Licence
-DoApps
-```;
+    getAllFileBuilderContents( listFileBuilders, filesStructure => {
+      const filesToBuild = normalizeFiles( filesStructure, { scopes, targets, macrotargets } );
+      const ownerFoldersInfo = {
+        rootFolderId,
+        templatesFolderId,
+        projectNamespace
+      };
 
-function buildRepositories( token, repositories = [] ) {
-  // TODO: make it run in async series
-  repositories.forEach( repository => {
-    APIHandler.createNewRepository( token, repository, ( err, repoData ) => {
-      if ( err ) {
-        debug( 'err', err );
-      }
+      const buildParameters = {
+        objFolders,
+        dataTemplates,
+        filesToBuild,
+        ownerFoldersInfo
+      };
 
-      const { id: projectId } = repoData;
-      const filePath = 'README.md';
-      const branchName = 'master';
-      const content = getInitialReadme( repository );
-      const commitMessage = 'initial commit';
-      APIHandler.createFileOnBranch( token, projectId, filePath, branchName, content, commitMessage, ( errNewFile ) => {
-        if ( errNewFile ) {
-          debug( 'errNewFile', errNewFile );
-        }
+      debug( 'buildParameters', buildParameters );
 
-        createBranches( token, projectId /*, () => { next() }*/ );
-      } );
+      setTimeout( () => {
+        debug( 'done gscript' );
+        cb( null, { folderId: 'folderId' } );
+      }, 1500 );
+      // runScriptBuilder( buildParameters, cb );
     } );
   } );
 }
@@ -202,46 +204,30 @@ function buildRepositories( token, repositories = [] ) {
 const BuilderMethods = {
   buildProject( environment, cb ) {
     const {
-      listFileBuilders,
-      objFolders,
       projectName,
       projectNamespace,
-      rootFolderId,
-      templatesFolderId,
-      scopes,
-      targets,
-      macrotargets,
-      repositories
+      repositories,
+      gitlabToken
     } = environment;
+
     setGlobalVariables( projectName, projectNamespace );
 
-    getTemplatesList( ( errTemplates, dataTemplates ) => {
-      if ( errTemplates ) {
-        debug( 'errTemplates', errTemplates );
+    parallel( [
+      buildProjectStructure.bind( null, environment ),
+      buildRepositories.bind( null, gitlabToken, repositories )
+    ], ( err, results ) => {
+      if ( err ) {
+        debug( 'err', err );
+        cb( err, null );
+        return;
       }
 
-      middlewareFillGlobals( dataTemplates );
+      const resultOne = results[ 0 ];
+      const resultTwo = results[ 1 ];
 
-      getAllFileBuilderContents( listFileBuilders, filesStructure => {
-        const filesToBuild = normalizeFiles( filesStructure, { scopes, targets, macrotargets } );
-        const ownerFoldersInfo = {
-          rootFolderId,
-          templatesFolderId,
-          projectNamespace
-        };
+      debug( 'resultOne', resultOne );
 
-        const buildParameters = {
-          objFolders,
-          dataTemplates,
-          filesToBuild,
-          ownerFoldersInfo
-        };
-
-        debug( 'buildParameters', buildParameters );
-
-        // cb( null, { folderId: 'folderId' } );
-        runScriptBuilder( buildParameters, cb );
-      } );
+      cb( null, resultTwo );
     } );
   }
 };

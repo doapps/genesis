@@ -377,7 +377,8 @@ const Builder = React.createClass( {
     );
   },
 
-  handleCrendentials( prop, data ) {
+  handleCrendentials( prop, username, token ) {
+    const data = { username, token };
     this.setState( { [ prop ]: data } );
   },
 
@@ -525,7 +526,8 @@ const Builder = React.createClass( {
       scopes: this.getAvailableScopes(),
       targets: this.getAvailableTargets()( 'namespace' ),
       macrotargets: this.getAvailableMacrotargets(),
-      repositories: this.getRepositories()
+      repositories: this.getRepositories(),
+      gitlabToken: this.state.gitlabCredentials.token
     } );
 
     this.setState( { buildingProject: true } );

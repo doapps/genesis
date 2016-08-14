@@ -48,7 +48,6 @@ const APIHandler = {
     }, cb );
   },
 
-  // It'd be better to handle this in another file with closures
   createNewRepository( token, projectName, cb ) {
     gitlabHandler.post( {
       path: '/projects',
@@ -72,8 +71,8 @@ const APIHandler = {
         file_path: filePath,
         branch_name: branchName,
         content: window.btoa( content ),
-        encode: 'base64',
-        commit_message: window.encodeURI( commitMessage )
+        encoding: 'base64',
+        commit_message: commitMessage
       },
       headers: { 'PRIVATE-TOKEN': token }
     }, cb );
