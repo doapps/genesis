@@ -21,9 +21,11 @@ const IntegrationsSetupSection = React.createClass( {
         </SubtitleSection>
           <SlackIntegration />
           <GitlabIntegration
-            handleCrendentials={ this.props.handleCrendentials }
+            handleCrendentials={ this.props.gitlabHandleCrendentials }
             credentials={ this.props.gitlabCredentials } />
-          <TrelloIntegration />
+          <TrelloIntegration
+            handleCrendentials={ this.props.trelloHandleCrendentials }
+            credentials={ this.props.trelloCredentials } />
         <br/>
         <NavigationButtons
           onClickNext={ this.props.goToNextStep }

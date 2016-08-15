@@ -145,7 +145,7 @@
               token: body.private_token,
               avatar: body.avatar_url,
               email: body.email,
-              name: body.name
+              username: body.username
             };
 
             cb( null, payload );
@@ -156,7 +156,6 @@
         if ( err ) {
           showErrorMessage( 'Error, Bad credentials' );
           enableInputs();
-          // responseParentWindow( { status: 401 } );
           return;
         }
 

@@ -11,17 +11,20 @@ export default class RequestHandler {
     return `${ this._url }${ path }`;
   }
 
-  get( { path }, cb ) {
+  get( { path, query = {} }, cb ) {
     const urlPath = this.getPath( path );
 
-    request.get( urlPath, ( err, res ) => {
-      if ( err ) {
-        cb( res, null );
-        return;
-      }
+    request
+      .get( urlPath )
+      .query( query )
+      .end( ( err, res ) => {
+        if ( err ) {
+          cb( res, null );
+          return;
+        }
 
-      cb( null, res.body );
-    } );
+        cb( null, res.body );
+      } );
   }
 
   getRawText( { path }, cb ) {

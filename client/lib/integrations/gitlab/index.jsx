@@ -26,7 +26,7 @@ const GitlabIntegration = React.createClass( {
     debug( 'payload', payload );
 
     if ( tokenGitlab ) {
-      this.props.handleCrendentials( payload.name, tokenGitlab );
+      this.props.handleCrendentials( payload.username, tokenGitlab );
     }
   },
 

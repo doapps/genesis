@@ -15,8 +15,7 @@ config.output = {
   path: './__site__',
   pathInfo: true,
   publicPath: '',
-  filename: 'bundle.[hash].min.js',
-// filename: 'bundle.min.js',
+  filename: 'bundle.[hash].min.js'
 };
 
 config.plugins = config.plugins.concat( [

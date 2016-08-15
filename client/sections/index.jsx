@@ -99,6 +99,7 @@ const Builder = React.createClass( {
       rootFolderId: '',
       templatesFolderId: '',
       gitlabCredentials: null,
+      trelloCredentials: null,
       targetsData: this.getTargetsAndScopes(),
       backendSources: this.getBackendSources()
     },
@@ -361,8 +362,10 @@ const Builder = React.createClass( {
       <IntegrationsSetupSection
         goToNextStep={ this.goToNextStep }
         goToPreviousStep={ this.goToPreviousStep }
-        handleCrendentials={ this.handleCrendentials.bind( null, 'gitlabCredentials' ) }
-        gitlabCredentials={ this.state.gitlabCredentials } />
+        gitlabHandleCrendentials={ this.handleCrendentials.bind( null, 'gitlabCredentials' ) }
+        trelloHandleCrendentials={ this.handleCrendentials.bind( null, 'trelloCredentials' ) }
+        gitlabCredentials={ this.state.gitlabCredentials }
+        trelloCredentials={ this.state.trelloCredentials } />
     );
   },
 
@@ -527,7 +530,8 @@ const Builder = React.createClass( {
       targets: this.getAvailableTargets()( 'namespace' ),
       macrotargets: this.getAvailableMacrotargets(),
       repositories: this.getRepositories(),
-      gitlabToken: this.state.gitlabCredentials.token
+      gitlabToken: this.state.gitlabCredentials.token,
+      trelloToken: this.state.trelloCredentials.token
     } );
 
     this.setState( { buildingProject: true } );

@@ -2,7 +2,7 @@ import each from 'async/each';
 
 import APIHandler from 'lib/api-handler';
 
-const debug = require( 'debug' )( 'app:lib:builder-methods:gitlab' );
+const debug = require( 'debug' )( 'app:lib:builder-methods:gitlab:builder' );
 
 const getInitialReadme = projectName => `
 # ${ projectName }

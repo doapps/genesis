@@ -4,6 +4,7 @@ import toml from 'toml';
 
 import APIHandler from 'lib/api-handler';
 import buildRepositories from 'lib/integrations/gitlab/builder';
+import buildTrelloData from 'lib/integrations/trello/builder';
 import { runScriptBuilder } from 'lib/integrations/google-drive';
 
 const debug = require( 'debug' )( 'app:lib:builder-methods' );
@@ -207,14 +208,17 @@ const BuilderMethods = {
       projectName,
       projectNamespace,
       repositories,
-      gitlabToken
+      targets,
+      gitlabToken,
+      trelloToken
     } = environment;
 
     setGlobalVariables( projectName, projectNamespace );
 
     parallel( [
       buildProjectStructure.bind( null, environment ),
-      buildRepositories.bind( null, gitlabToken, repositories )
+      buildRepositories.bind( null, gitlabToken, repositories ),
+      buildTrelloData.bind( null, trelloToken, projectName, targets )
     ], ( err, results ) => {
       if ( err ) {
         debug( 'err', err );
@@ -224,8 +228,11 @@ const BuilderMethods = {
 
       const resultOne = results[ 0 ];
       const resultTwo = results[ 1 ];
+      const resultThree = results[ 2 ];
 
       debug( 'resultOne', resultOne );
+      debug( 'resultTwo', resultTwo );
+      debug( 'resultThree', resultThree );
 
       cb( null, resultTwo );
     } );
