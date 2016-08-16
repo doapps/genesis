@@ -17,8 +17,8 @@
     "api_key": "3e94bccaf31b389d9a8866894446d6ac"
   },
   "slack": {
-    "client_id": "3869533325.69523739652",
-    "client_secret": "ceffff84b1df09eaaa8dd0c3a255bad1",
+    "client_id": "2817642925.69682945538",
+    "client_secret": "475551c365be247e08b5c13c4a6cdc8f",
     "scope": "users:read,groups:write"
   }
 }
