@@ -195,7 +195,7 @@ function buildProjectStructure( environment, cb ) {
 
       // setTimeout( () => {
       //   debug( 'done gscript' );
-      //   cb( null, { folderId: 'folderId' } );
+      //   cb( null, { folderId: 'xxx' } );
       // }, 1500 );
       runScriptBuilder( buildParameters, cb );
     } );

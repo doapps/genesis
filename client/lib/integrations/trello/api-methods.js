@@ -57,11 +57,12 @@ const trelloAPI = {
         key: trelloKey,
         token
       },
-      body: {
-        name: boardName,
-        defaultLists: false,
-        prefs_background: sample( trelloColors )
-      }
+      body: `name=${ boardName }&defaultLists=false&prefs_background=${ sample( trelloColors ) }`
+      // body: {
+      //   name: boardName,
+      //   defaultLists: false,
+      //   prefs_background: sample( trelloColors )
+      // }
     }, cb );
   },
 
@@ -72,10 +73,11 @@ const trelloAPI = {
         key: trelloKey,
         token
       },
-      body: {
-        name: listName,
-        idBoard: boardId
-      }
+      body: `name=${ listName }&idBoard=${ boardId }`
+      // body: {
+      //   name: listName,
+      //   idBoard: boardId
+      // }
     }, cb );
   }
 };

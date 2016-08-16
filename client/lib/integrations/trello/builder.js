@@ -21,9 +21,9 @@ function getBoardLists( targets ) {
 
 function buildTrelloData( token, boardName, targets = [], cb ) {
   APIHandler.createBoard( token, boardName, ( errBoard, boardInfo ) => {
-    if ( errBoard ) {
+    if ( errBoard || ! boardInfo ) {
       debug( 'errBoard', errBoard );
-      cb( errBoard, null );
+      cb( { status: 500 }, null );
       return;
     }
 
