@@ -3,11 +3,16 @@ import emitter from 'lib/mixins/emitter';
 
 const debug = require( 'debug' )( 'app:lib:popup-window:store' );
 
-let windowData = null;
+const windowData = {};
+let openerJustDispatched;
 
 const PopupWindowStore = {
-  getPopupResponse() {
-    return windowData;
+  getPopupResponse( openerName ) {
+    return windowData[ openerName ];
+  },
+
+  getRecentOpenerDispatched() {
+    return openerJustDispatched;
   },
 
   emitChange() {
@@ -20,9 +25,10 @@ PopupWindowStore.dispatchToken = Dispatcher.register( payload => {
 
   switch ( action.type ) {
     case 'RECEIVE_WINDOW_DATA_SUCCESS':
-      const { data } = action;
+      const { data, openerName } = action;
 
-      windowData = data;
+      windowData[ openerName ] = data;
+      openerJustDispatched = openerName;
 
       PopupWindowStore.emitChange();
       break;

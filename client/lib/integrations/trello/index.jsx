@@ -26,7 +26,7 @@ const TrelloIntegration = React.createClass( {
 
         const { idMember } = tokenInfo;
 
-        APIHandler.getUserInfo( token, idMember, ( errUser, userData ) => {
+        APIHandler.getTrelloUserInfo( token, idMember, ( errUser, userData ) => {
           if ( errUser ) {
             debug( 'errUser', errUser );
             return;

@@ -1,0 +1,24 @@
+{
+  "google_drive": {
+    "client_id": "494857266143-s5miocne763456shvqr6nh5q8i4olqin.apps.googleusercontent.com",
+    "api_key": "AIzaSyAv7QK4qvotGd491fBu1iOYqmWmG_5Q9Ig",
+    "script_id": "MmfSf4AzQaez_YS5SScyV4uV-tPu4-D5Y",
+    "function_name": "buildProject"
+  },
+  "github": {
+    "api_key": "",
+    "user": "doapps",
+    "repository": "dspp",
+    "internals_folder": "internals",
+    "base_folder": "base"
+  },
+  "gitlab": null,
+  "trello": {
+    "api_key": "3e94bccaf31b389d9a8866894446d6ac"
+  },
+  "slack": {
+    "client_id": "3869533325.69523739652",
+    "client_secret": "ceffff84b1df09eaaa8dd0c3a255bad1",
+    "scope": "users:read,groups:write"
+  }
+}

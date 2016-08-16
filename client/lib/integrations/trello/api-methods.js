@@ -43,7 +43,7 @@ const trelloAPI = {
     }, cb );
   },
 
-  getUserInfo( token, userId, cb ) {
+  getTrelloUserInfo( token, userId, cb ) {
     trelloHandler.get( {
       path: `/members/${ userId }`,
       query: { key: trelloKey, fields: 'username,fullName', token }
@@ -54,11 +54,13 @@ const trelloAPI = {
     trelloHandler.post( {
       path: `/boards`,
       query: {
-        name: boardName,
-        defaultLists: false,
-        prefs_background: sample( trelloColors ),
         key: trelloKey,
         token
+      },
+      body: {
+        name: boardName,
+        defaultLists: false,
+        prefs_background: sample( trelloColors )
       }
     }, cb );
   },
@@ -67,10 +69,12 @@ const trelloAPI = {
     trelloHandler.post( {
       path: `/lists`,
       query: {
-        name: listName,
-        idBoard: boardId,
         key: trelloKey,
         token
+      },
+      body: {
+        name: listName,
+        idBoard: boardId
       }
     }, cb );
   }

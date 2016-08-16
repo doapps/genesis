@@ -27,7 +27,7 @@ module.exports = {
   resolve: {
     root: path.join( __dirname, '' ),
     modulesDirectories: [ 'web_modules', 'node_modules', 'client' ],
-    extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx' ]
+    extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ]
   },
 
   plugins: [
@@ -44,6 +44,10 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: 'style!css!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       }
     ],
 

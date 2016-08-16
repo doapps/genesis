@@ -9,7 +9,7 @@ const PopupWindowActions = {
     openWindow( url );
   },
 
-  receiveData( dataWindow ) {
+  receiveData( openerName, dataWindow ) {
     const { status } = dataWindow;
 
     if ( status > 400 ) {
@@ -19,15 +19,16 @@ const PopupWindowActions = {
     } else {
       Dispatcher.handleServerAction( {
         type: 'RECEIVE_WINDOW_DATA_SUCCESS',
-        data: dataWindow.data
+        data: dataWindow.data,
+        openerName
       } );
     }
   }
 };
 
-const popupCallback = data => {
+const popupCallback = ( openerName, data ) => {
   debug( 'This is callback: ', data );
-  PopupWindowActions.receiveData( data );
+  PopupWindowActions.receiveData( openerName, data );
 }
 
 window.popupCallback = popupCallback;

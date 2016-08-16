@@ -19,7 +19,9 @@ const IntegrationsSetupSection = React.createClass( {
         <SubtitleSection>
           Seleccione las <strong>integraciones</strong> de la lista
         </SubtitleSection>
-          <SlackIntegration />
+          <SlackIntegration
+            handleCrendentials={ this.props.slackHandleCrendentials }
+            credentials={ this.props.slackCredentials } />
           <GitlabIntegration
             handleCrendentials={ this.props.gitlabHandleCrendentials }
             credentials={ this.props.gitlabCredentials } />

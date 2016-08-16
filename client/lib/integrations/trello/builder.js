@@ -23,7 +23,11 @@ function buildTrelloData( token, boardName, targets = [], cb ) {
   APIHandler.createBoard( token, boardName, ( errBoard, boardInfo ) => {
     if ( errBoard ) {
       debug( 'errBoard', errBoard );
+      cb( errBoard, null );
+      return;
     }
+
+    debug( 'boardInfo', boardInfo );
 
     const { id: boardId } = boardInfo;
     const boardLists = getBoardLists( targets );
@@ -43,6 +47,7 @@ function buildTrelloData( token, boardName, targets = [], cb ) {
         return;
       }
 
+      APIHandler.trelloDeauthorize();
       cb( null, 'done trello' );
     } );
   } );

@@ -2,6 +2,7 @@
 
 var webpack = require( 'webpack' );
 var HtmlWebpackPlugin = require( 'html-webpack-plugin' );
+var CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 var config = require( './webpack.config.base.js' );
 
 var SaveAssetsJson = require( 'assets-webpack-plugin' );
@@ -33,6 +34,9 @@ config.plugins = config.plugins.concat( [
     filename: 'assets.json'
   } ),
   new webpack.DefinePlugin( { 'process.env': { NODE_ENV: JSON.stringify( 'production' ) } } ),
+  new CopyWebpackPlugin( [
+    { from: './static-files/util.js' },
+  ] ),
   new HtmlWebpackPlugin( {
     title: 'Genesis',
     filename: 'index.html',
@@ -54,7 +58,18 @@ config.plugins = config.plugins.concat( [
       minifyJS: true,
     },
     template: './static-files/gitlab.html'
-  } )
+  } ),
+  new HtmlWebpackPlugin( {
+    title: 'Slack Auth',
+    filename: 'slack-wrapper.html',
+    favicon: './static-files/favicon.ico',
+    minify: {
+      collapseWhitespace: true,
+      minifyCSS: true,
+      minifyJS: true,
+    },
+    template: './static-files/slack-wrapper.html'
+  } ),
 ] );
 
 config.module.loaders = config.module.loaders.concat( [

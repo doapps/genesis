@@ -1,206 +1,11 @@
-import each from 'async/each';
 import parallel from 'async/parallel';
-import toml from 'toml';
 
-import APIHandler from 'lib/api-handler';
+import buildProjectStructure from 'lib/integrations/github/builder';
 import buildRepositories from 'lib/integrations/gitlab/builder';
 import buildTrelloData from 'lib/integrations/trello/builder';
-import { runScriptBuilder } from 'lib/integrations/google-drive';
+import buildSlackData from 'lib/integrations/slack/builder';
 
 const debug = require( 'debug' )( 'app:lib:builder-methods' );
-const templatesFilename = 'templates.toml';
-
-const globalVariables = {
-  projectName: '',
-  projectNamespace: ''
-};
-
-const macrotargetRegex = /<macrotarget>/g;
-const targetRegex = /<target>/g;
-const scopeRegex = /<scope>/g;
-
-function setGlobalVariables( projectName, projectNamespace ) {
-  globalVariables.projectName = projectName;
-  globalVariables.projectNamespace = projectNamespace;
-}
-
-function getTemplatesList( cb ) {
-  const path = templatesFilename;
-  APIHandler.fetchInternalsContent( path, ( err, templatesText ) => {
-    if ( err ) {
-      cb( err, null );
-      return;
-    }
-
-    const parsedStructure = toml.parse( templatesText );
-    cb( null, parsedStructure );
-  } );
-}
-
-function getAndParseFileContent( path, cb ) {
-  APIHandler.fetchFileContent( path, ( error, content ) => {
-    if ( error ) {
-      debug( 'error', error );
-      cb( error, null );
-      return;
-    }
-
-    const parsedStructure = toml.parse( content );
-    cb( null, parsedStructure );
-  } );
-}
-
-function getAllFileBuilderContents( listFileBuilders, cb ) {
-  const builderFilesStructure = {};
-
-  each( listFileBuilders, ( folderPath, next ) => {
-    const filePath = `${ folderPath }/files.toml`;
-    getAndParseFileContent( filePath, ( error, data ) => {
-      if ( error ) {
-        debug( 'error', error );
-      }
-
-      builderFilesStructure[ folderPath ] = data;
-      next();
-    } );
-  }, () => {
-    cb( builderFilesStructure );
-  } );
-}
-
-function middlewareFillGlobals( objTemplates ) {
-  for ( let template in objTemplates ) {
-    const templateElement = objTemplates[ template ];
-
-    if ( templateElement.body ) {
-      for ( let variable in templateElement.body ) {
-        const variableContent = templateElement.body[ variable ];
-
-        templateElement.body[ variable ] = variableContent
-          .replace( /<project-name>/g, globalVariables.projectName )
-          .replace( /<namespace>/g, globalVariables.projectNamespace );
-      }
-    }
-  }
-}
-
-function normalizeFiles( filesStructure, { scopes = [], targets = [], macrotargets = [] } ) {
-  const normalizedFiles = {};
-
-  for ( let path in filesStructure ) {
-    const pathObj = filesStructure[ path ];
-    normalizedFiles[ path ] = {};
-
-    for ( let file in pathObj ) {
-      const fileProps = pathObj[ file ];
-
-      if ( macrotargetRegex.test( file ) ) {
-        macrotargets.forEach( macrotarget => {
-          const newFilename = file.replace( macrotargetRegex, macrotarget );
-          let fileBody = Object.assign( {}, fileProps.body );
-
-          if ( fileProps.body ) {
-            for ( let prop in fileProps.body ) {
-              fileBody[ prop ] = fileProps.body[ prop ].replace( macrotargetRegex, macrotarget );
-            }
-
-            fileProps.body = fileBody;
-          }
-
-          normalizedFiles[ path ][ newFilename ] = fileProps;
-        } );
-      } else if ( targetRegex.test( file ) ) {
-        targets.forEach( target => {
-          const newFilename = file.replace( targetRegex, target );
-          let fileBody = Object.assign( {}, fileProps.body );
-
-          if ( fileProps.body ) {
-            for ( let prop in fileProps.body ) {
-              fileBody[ prop ] = fileProps.body[ prop ].replace( targetRegex, target );
-            }
-
-            fileProps.body = fileBody;
-          }
-
-          normalizedFiles[ path ][ newFilename ] = fileProps;
-        } );
-      } else if ( scopeRegex.test( file ) ) {
-        scopes.forEach( scope => {
-          let newFilename, fileBody;
-
-          if ( scopes.length === 1 ) {
-            // this temporal workaround resolve
-            // "requirements.<scope>" but not "requirements.<scope>.body"
-            newFilename = file.replace( scopeRegex, '' ).slice( 0, - 1 );
-          } else {
-            newFilename = file.replace( scopeRegex, scope );
-          }
-
-          fileBody = Object.assign( {}, fileProps.body );
-
-          if ( fileProps.body ) {
-            for ( let prop in fileProps.body ) {
-              fileBody[ prop ] = fileProps.body[ prop ].replace( scopeRegex, scope );
-            }
-
-            fileProps.body = fileBody;
-          }
-
-          normalizedFiles[ path ][ newFilename ] = fileProps;
-        } );
-      } else {
-        normalizedFiles[ path ][ file ] = fileProps;
-      }
-    }
-  }
-
-  return normalizedFiles;
-}
-
-function buildProjectStructure( environment, cb ) {
-  const {
-    listFileBuilders,
-    objFolders,
-    projectNamespace,
-    rootFolderId,
-    templatesFolderId,
-    scopes,
-    targets,
-    macrotargets
-  } = environment;
-
-  getTemplatesList( ( errTemplates, dataTemplates ) => {
-    if ( errTemplates ) {
-      debug( 'errTemplates', errTemplates );
-    }
-
-    middlewareFillGlobals( dataTemplates );
-
-    getAllFileBuilderContents( listFileBuilders, filesStructure => {
-      const filesToBuild = normalizeFiles( filesStructure, { scopes, targets, macrotargets } );
-      const ownerFoldersInfo = {
-        rootFolderId,
-        templatesFolderId,
-        projectNamespace
-      };
-
-      const buildParameters = {
-        objFolders,
-        dataTemplates,
-        filesToBuild,
-        ownerFoldersInfo
-      };
-
-      debug( 'buildParameters', buildParameters );
-
-      setTimeout( () => {
-        debug( 'done gscript' );
-        cb( null, { folderId: 'folderId' } );
-      }, 1500 );
-      // runScriptBuilder( buildParameters, cb );
-    } );
-  } );
-}
 
 const BuilderMethods = {
   buildProject( environment, cb ) {
@@ -210,15 +15,15 @@ const BuilderMethods = {
       repositories,
       targets,
       gitlabToken,
-      trelloToken
+      trelloToken,
+      slackToken
     } = environment;
-
-    setGlobalVariables( projectName, projectNamespace );
 
     parallel( [
       buildProjectStructure.bind( null, environment ),
       buildRepositories.bind( null, gitlabToken, repositories ),
-      buildTrelloData.bind( null, trelloToken, projectName, targets )
+      buildTrelloData.bind( null, trelloToken, projectName, targets ),
+      buildSlackData.bind( null, slackToken, projectNamespace )
     ], ( err, results ) => {
       if ( err ) {
         debug( 'err', err );
@@ -229,12 +34,14 @@ const BuilderMethods = {
       const resultOne = results[ 0 ];
       const resultTwo = results[ 1 ];
       const resultThree = results[ 2 ];
+      const resultFour = results[ 3 ];
 
       debug( 'resultOne', resultOne );
       debug( 'resultTwo', resultTwo );
       debug( 'resultThree', resultThree );
+      debug( 'resultFour', resultFour );
 
-      cb( null, resultTwo );
+      cb( null, resultOne );
     } );
   }
 };
