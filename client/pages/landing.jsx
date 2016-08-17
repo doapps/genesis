@@ -29,7 +29,7 @@ const Landing = React.createClass( {
         <div className="hero-body">
           <div className="container">
             <p>
-              <img src="https://raw.githubusercontent.com/doapps/genesis/master/static-files/logo-dark.png" alt="Genesis"/>
+              <img src="https://raw.githubusercontent.com/doapps/genesis/master/static-files/logo-120.png" alt="Genesis"/>
             </p>
             <br/>
             <h1 className="title">Genesis</h1>

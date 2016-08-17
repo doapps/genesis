@@ -19,7 +19,13 @@ function getBoardLists( targets ) {
   return list;
 }
 
-function buildTrelloData( token, boardName, targets = [], cb ) {
+function buildTrelloData( environment, cb ) {
+  const {
+    trelloToken: token,
+    projectNamespace: boardName,
+    targets
+  } = environment;
+
   APIHandler.createBoard( token, boardName, ( errBoard, boardInfo ) => {
     if ( errBoard || ! boardInfo ) {
       debug( 'errBoard', errBoard );

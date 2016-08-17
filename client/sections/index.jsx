@@ -1,6 +1,7 @@
 import React from 'react';
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
+import result from 'lodash/result';
 import pickBy from 'lodash/pickBy';
 import intersection from 'lodash/intersection';
 import keys from 'lodash/keys';
@@ -13,7 +14,7 @@ import IntegrationsSetupSection from 'sections/integrations-setup';
 import BuildProjectSection from 'sections/build-project';
 import GithubTreeActions from 'lib/github-tree/actions';
 import GithubTreeStore from 'lib/github-tree/store';
-import BuilderMethods from 'lib/builder-methods';
+import ProjectBuilder from 'lib/project-builder';
 import { slugify } from 'lib/form-helpers';
 
 const debug = require( 'debug' )( 'app:sections' );
@@ -533,14 +534,14 @@ const Builder = React.createClass( {
       targets: this.getAvailableTargets()( 'namespace' ),
       macrotargets: this.getAvailableMacrotargets(),
       repositories: this.getRepositories(),
-      gitlabToken: this.state.gitlabCredentials.token,
-      trelloToken: this.state.trelloCredentials.token,
-      slackToken: this.state.slackCredentials.token
+      gitlabToken: result( this.state.gitlabCredentials, 'token' ),
+      trelloToken: result( this.state.trelloCredentials, 'token' ),
+      slackToken: result( this.state.slackCredentials, 'token' )
     } );
 
     this.setState( { buildingProject: true } );
 
-    BuilderMethods.buildProject( environment, ( error, payloadResult ) => {
+    ProjectBuilder( environment, error => {
       debug( 'payloadResult', payloadResult );
       const { folderId } = payloadResult;
 
