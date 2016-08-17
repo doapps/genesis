@@ -58,8 +58,8 @@ export const prepareAuth = cb => {
       const authData = googleUser.getAuthResponse();
       const googleUserData = googleUser.getBasicProfile();
 
+      debug( 'authData', authData );
       oauthToken = authData.access_token;
-      debug( 'oauthToken', oauthToken );
       loadDriveInfo();
 
       const userData = {
