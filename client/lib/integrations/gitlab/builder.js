@@ -2,7 +2,7 @@ import each from 'async/each';
 
 import APIHandler from 'lib/api-handler';
 
-const debug = require( 'debug' )( 'app:lib:builder-methods:gitlab:builder' );
+const debug = require( 'debug' )( 'app:lib:integrations:gitlab:builder' );
 
 const getInitialReadme = projectName => `
 # ${ projectName }
@@ -33,7 +33,12 @@ function createBranches( token, projectId, cb ) {
   } );
 }
 
-function buildRepositories( token, repositories = [], cb ) {
+function buildRepositories( environment, cb ) {
+  const {
+    gitlabToken: token,
+    repositories
+  } = environment;
+
   each( repositories, ( repository, next ) => {
     APIHandler.createNewRepository( token, repository, ( errNewRepo, repoData ) => {
       if ( errNewRepo ) {
