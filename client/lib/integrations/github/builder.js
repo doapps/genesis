@@ -2,7 +2,9 @@ import each from 'async/each';
 import toml from 'toml';
 
 import APIHandler from 'lib/api-handler';
+import ProjectBuilderActions from 'lib/project-builder/actions';
 import { runScriptBuilder } from 'lib/integrations/google-drive';
+import { buildConstants, integrationsConstants } from 'lib/project-builder/build-status-constants';
 
 const debug = require( 'debug' )( 'app:lib:integrations:github:builder' );
 
@@ -167,6 +169,14 @@ function buildProjectStructure( environment, cb ) {
     macrotargets
   } = environment;
 
+  const integrationName = integrationsConstants.GOOGLE_DRIVE;
+  const buildStatusLoading = {
+    status: buildConstants.LOADING,
+    data: {}
+  };
+
+  ProjectBuilderActions.setBuildStatus( integrationName, buildStatusLoading );
+
   setGlobalVariables( projectName, projectNamespace );
 
   getTemplatesList( ( errTemplates, dataTemplates ) => {
@@ -193,11 +203,11 @@ function buildProjectStructure( environment, cb ) {
 
       debug( 'buildParameters', buildParameters );
 
-      // setTimeout( () => {
-      //   debug( 'done gscript' );
-      //   cb( null, { folderId: 'xxx' } );
-      // }, 1500 );
-      runScriptBuilder( buildParameters, cb );
+      setTimeout( () => {
+        debug( 'done gscript' );
+        cb( null, { status: 200 } );
+      }, 1500 );
+      // runScriptBuilder( buildParameters, cb );
     } );
   } );
 }

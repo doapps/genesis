@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import omit from 'lodash/omit';
 
 import { createPicker } from 'lib/integrations/google-drive';
+import { globalBuildConstants } from 'lib/project-builder/build-status-constants';
 
 const debug = require( 'debug' )( 'app:components:form' );
 
@@ -142,41 +143,50 @@ export const Step = React.createClass( {
 export const BuildButton = React.createClass( {
   displayName: 'BuildButton',
 
-  getRedirectURL( folderId ) {
-    return `https://drive.google.com/drive/folders/${ folderId }`;
+  getButtonContext( state ) {
+    let buttonProps;
+
+    switch ( state ) {
+      case globalBuildConstants.IDLE:
+        buttonProps = {
+          icon: 'fa fa-gears',
+          text: 'Build'
+        };
+        break;
+      case globalBuildConstants.LOADING:
+        buttonProps = {
+          icon: 'fa fa-cog fa-spin fa-3x fa-fw',
+          text: 'Building'
+        };
+        break;
+      case globalBuildConstants.DONE:
+        buttonProps = {
+          icon: 'fa fa-check',
+          text: 'Completed'
+        };
+        break;
+    }
+
+    return buttonProps;
   },
 
   render() {
-    const { isWorkingInProgress, isWorkingDoneURL } = this.props;
-    let styleButton = classnames( {
+    const { statusButton, onClick } = this.props;
+    const buttonProps = this.getButtonContext( statusButton );
+    const styleButton = classnames( {
       button: true,
-      'is-info': ! isWorkingDoneURL,
-      'is-success': isWorkingDoneURL,
       'is-large': true,
-      'is-loading': isWorkingInProgress,
-      'is-disabled': isWorkingInProgress
+      'is-info': statusButton !== globalBuildConstants.DONE,
+      'is-disabled': statusButton !== globalBuildConstants.IDLE
     } );
-    const redirectURL = isWorkingDoneURL ? this.getRedirectURL( isWorkingDoneURL ) : null;
-    const onClickHandler = ! isWorkingDoneURL ? this.props.onClick : null;
-    const buttonIcon = isWorkingDoneURL ? 'fa fa-check' : 'fa fa-gears';
-    const targetLink = isWorkingDoneURL ? '_blank' : null;
 
     return (
       <div className="hero-buttons">
-        <a href={ redirectURL } target={ targetLink } onClick={ onClickHandler } className={ styleButton }>
+        <a onClick={ onClick } className={ styleButton }>
           <span className="icon is-medium">
-            <i className={ buttonIcon }></i>
-          </span>
-          <span>
-            {
-              isWorkingDoneURL
-              ? <span>
-                  Completado
-                  <small>Click para ir a la carpeta</small>
-                </span>
-              : 'Build'
-            }
-          </span>
+            <i className={ buttonProps.icon }></i>
+          </span>&nbsp;
+          { buttonProps.text }
         </a>
       </div>
     );

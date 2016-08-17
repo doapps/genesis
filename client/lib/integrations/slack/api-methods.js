@@ -31,6 +31,13 @@ const slackAPI = {
       path: '/groups.create',
       body: `name=${ channelName }&token=${ token }`
     }, cb );
+  },
+
+  postMessageOnChannel( token, channelId, text, username, iconUrl, cb ) {
+    slackHandler.post( {
+      path: '/chat.postMessage',
+      body: `token=${ token }&channel=${ channelId }&text=${ text }&username=${ username }&icon_url=${ iconUrl }`
+    }, cb );
   }
 };
 

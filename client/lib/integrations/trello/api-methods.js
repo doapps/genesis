@@ -1,11 +1,12 @@
 import sample from 'lodash/sample';
 
+import config from 'config';
 import RequestHandler from 'lib/api-handler/request-handler';
 
 const debug = require( 'debug' )( 'app:lib:integrations:trello:api-methods' );
 
 const trelloPath = 'https://api.trello.com/1';
-const trelloKey = '3e94bccaf31b389d9a8866894446d6ac';
+const trelloKey = config( 'trello' )( 'api_key' );
 const trelloColors = [ 'black', 'blue', 'green', 'lime', 'orange', 'pink', 'purple', 'red', 'sky', 'yellow' ];
 const projectName = 'Genesis';
 
@@ -31,7 +32,6 @@ const trelloAPI = {
     } );
   },
 
-  // Deauthorize in every after-building
   trelloDeauthorize() {
     window.Trello.deauthorize();
   },
@@ -58,11 +58,6 @@ const trelloAPI = {
         token
       },
       body: `name=${ boardName }&defaultLists=false&prefs_background=${ sample( trelloColors ) }`
-      // body: {
-      //   name: boardName,
-      //   defaultLists: false,
-      //   prefs_background: sample( trelloColors )
-      // }
     }, cb );
   },
 
@@ -74,10 +69,6 @@ const trelloAPI = {
         token
       },
       body: `name=${ listName }&idBoard=${ boardId }`
-      // body: {
-      //   name: listName,
-      //   idBoard: boardId
-      // }
     }, cb );
   }
 };

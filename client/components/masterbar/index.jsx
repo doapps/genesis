@@ -5,15 +5,11 @@ import { StepDivision, StepTitle } from 'components/step';
 
 const debug = require( 'debug' )( 'app:components:masterbar' );
 
-const Logo = React.createClass( {
-  render() {
-    return (
-      <span className="icon">
-        <i className="fa fa-diamond"></i>
-      </span>
-    );
-  }
-} );
+const LogoIcon = () => (
+  <span className="icon">
+    <img src="https://raw.githubusercontent.com/doapps/genesis/master/static-files/logo-light-45.png" />
+  </span>
+);
 
 const Masterbar = React.createClass( {
   getInitialState() {
@@ -44,7 +40,7 @@ const Masterbar = React.createClass( {
               </div>
               <div className="nav-center">
                 <a className="nav-item" href="#">
-                  <Logo/>
+                  <LogoIcon/>
                 </a>
               </div>
               <div className="nav-right nav-menu">

@@ -1,9 +1,13 @@
 import capitalize from 'lodash/capitalize';
 import async from 'async';
 
+import ProjectBuilderActions from 'lib/project-builder/actions';
+import { buildConstants, integrationsConstants } from 'lib/project-builder/build-status-constants';
 import APIHandler from 'lib/api-handler';
 
 const debug = require( 'debug' )( 'app:lib:builder-methods:trello:builder' );
+
+const integrationName = integrationsConstants.TRELLO;
 
 function getBoardLists( targets ) {
   const list = [];
@@ -25,6 +29,13 @@ function buildTrelloData( environment, cb ) {
     projectNamespace: boardName,
     targets
   } = environment;
+
+  const buildStatusLoading = {
+    status: buildConstants.LOADING,
+    data: {}
+  };
+
+  ProjectBuilderActions.setBuildStatus( integrationName, buildStatusLoading );
 
   APIHandler.createBoard( token, boardName, ( errBoard, boardInfo ) => {
     if ( errBoard || ! boardInfo ) {
@@ -53,8 +64,19 @@ function buildTrelloData( environment, cb ) {
         return;
       }
 
+      const buildStatus = {
+        status: buildConstants.DONE,
+        data: {
+          doneURL: `http://trello.com`
+          // doneURL: `https://trello.com/b/${ channelName }`
+        }
+      };
+
+      debug( 'done trello' );
+      ProjectBuilderActions.setBuildStatus( integrationName, buildStatus );
+
       APIHandler.trelloDeauthorize();
-      cb( null, 'done trello' );
+      cb( null, { status: 200 } );
     } );
   } );
 }

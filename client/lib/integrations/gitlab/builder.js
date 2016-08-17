@@ -1,6 +1,8 @@
 import each from 'async/each';
 
 import APIHandler from 'lib/api-handler';
+import ProjectBuilderActions from 'lib/project-builder/actions';
+import { buildConstants, integrationsConstants } from 'lib/project-builder/build-status-constants';
 
 const debug = require( 'debug' )( 'app:lib:integrations:gitlab:builder' );
 
@@ -11,6 +13,8 @@ New project content
 ## Licence
 DoApps
 `;
+
+const integrationName = integrationsConstants.GITLAB;
 
 function createBranches( token, projectId, cb ) {
   const listBranches = [ 'development', 'release', 'hotfix' ];
@@ -38,6 +42,13 @@ function buildRepositories( environment, cb ) {
     gitlabToken: token,
     repositories
   } = environment;
+
+  const buildStatusLoading = {
+    status: buildConstants.LOADING,
+    data: {}
+  };
+
+  ProjectBuilderActions.setBuildStatus( integrationName, buildStatusLoading );
 
   each( repositories, ( repository, next ) => {
     APIHandler.createNewRepository( token, repository, ( errNewRepo, repoData ) => {
@@ -74,7 +85,17 @@ function buildRepositories( environment, cb ) {
       return;
     }
 
-    cb( null, 'done gitlab' );
+    const buildStatus = {
+      status: buildConstants.DONE,
+      data: {
+        doneURL: `https://gitlab.com`
+      }
+    };
+
+    debug( 'done gitlab' );
+    ProjectBuilderActions.setBuildStatus( integrationName, buildStatus );
+
+    cb( null, { status: 200 } );
   } );
 }
 

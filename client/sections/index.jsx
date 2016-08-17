@@ -4,6 +4,7 @@ import findIndex from 'lodash/findIndex';
 import result from 'lodash/result';
 import pickBy from 'lodash/pickBy';
 import intersection from 'lodash/intersection';
+import transform from 'lodash/transform';
 import keys from 'lodash/keys';
 
 import Masterbar from 'components/masterbar';
@@ -15,6 +16,8 @@ import BuildProjectSection from 'sections/build-project';
 import GithubTreeActions from 'lib/github-tree/actions';
 import GithubTreeStore from 'lib/github-tree/store';
 import ProjectBuilder from 'lib/project-builder';
+import ProjectBuilderStore from 'lib/project-builder/store';
+import { globalBuildConstants } from 'lib/project-builder/build-status-constants';
 import { slugify } from 'lib/form-helpers';
 
 const debug = require( 'debug' )( 'app:sections' );
@@ -95,13 +98,14 @@ const Builder = React.createClass( {
       projectNamespace: '',
       projectTree: null,
       currentStep: 0,
-      buildingProject: false,
-      buildingDoneURL: '',
       rootFolderId: '',
       templatesFolderId: '',
       gitlabCredentials: null,
       trelloCredentials: null,
       slackCredentials: null,
+      globalBuildStatus: globalBuildConstants.IDLE,
+      integrationsStatus: [],
+      integrationsCount: 0,
       targetsData: this.getTargetsAndScopes(),
       backendSources: this.getBackendSources()
     },
@@ -167,10 +171,35 @@ const Builder = React.createClass( {
   componentDidMount() {
     GithubTreeActions.getAndParseRepositoryTree();
     GithubTreeStore.on( 'change', this.updateProjectTree );
+    ProjectBuilderStore.on( 'change', this.updateStatusBuild );
   },
 
   componentWillUnmount() {
     GithubTreeStore.removeListener( 'change', this.updateProjectTree );
+    ProjectBuilderStore.removeListener( 'change', this.updateStatusBuild );
+  },
+
+  updateStatusBuild() {
+    const integrationsStatusRaw = ProjectBuilderStore.getIntegrationsStatus();
+    const integrationsCount = ProjectBuilderStore.getIntegrationsCount();
+    let integrationsStatus = [];
+
+    debug( 'integrationsStatusRaw', integrationsStatusRaw );
+    debug( 'integrationsCount', integrationsCount );
+
+    integrationsStatus = transform( integrationsStatusRaw, ( accumulator, value, key ) => {
+      accumulator.push( {
+        name: key,
+        ...value
+      } );
+    }, [] );
+
+    debug( 'integrationsStatus', integrationsStatus );
+
+    this.setState( {
+      integrationsStatus,
+      integrationsCount
+    } );
   },
 
   updateProjectTree() {
@@ -377,10 +406,10 @@ const Builder = React.createClass( {
     return (
       <BuildProjectSection
         data={ this.getProjectData() }
+        goToPreviousStep={ this.goToPreviousStep }
         buildProjectHandler={ this.buildProjectHandler }
-        buildingDoneURL={ this.state.buildingDoneURL }
-        buildingProject={ this.state.buildingProject }
-        goToPreviousStep={ this.goToPreviousStep } />
+        globalBuildStatus={ this.state.globalBuildStatus }
+        integrationsStatus={ this.state.integrationsStatus } />
     );
   },
 
@@ -539,16 +568,16 @@ const Builder = React.createClass( {
       slackToken: result( this.state.slackCredentials, 'token' )
     } );
 
-    this.setState( { buildingProject: true } );
+    this.setState( { globalBuildStatus: globalBuildConstants.LOADING } );
 
     ProjectBuilder( environment, error => {
-      debug( 'payloadResult', payloadResult );
-      const { folderId } = payloadResult;
+      if ( error ) {
+        debug( 'Error building' );
+        return;
+      }
 
-      this.setState( {
-        buildingDoneURL: folderId,
-        buildingProject: false
-      } );
+      this.setState( { globalBuildStatus: globalBuildConstants.DONE } );
+      debug( 'ALL RIGHT!' );
     } );
   },
 

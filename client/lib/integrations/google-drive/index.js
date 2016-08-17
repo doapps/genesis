@@ -1,19 +1,25 @@
+import config from 'config';
+import ProjectBuilderActions from 'lib/project-builder/actions';
+import { buildConstants, integrationsConstants } from 'lib/project-builder/build-status-constants';
+
 const debug = require( 'debug' )( 'app:lib:integrations:google-drive' );
 
-const GDRIVE_CLIENT_ID = '494857266143-s5miocne763456shvqr6nh5q8i4olqin.apps.googleusercontent.com';
+const GDRIVE_CLIENT_ID = config( 'google_drive' )( 'client_id' );
 const GDRIVE_COOKIE_POLICY = 'single_host_origin';
 const GDRIVE_SCOPES = [
   'https://www.googleapis.com/auth/documents',
   'https://www.googleapis.com/auth/drive'
 ];
-const GDRIVE_API_KEY = 'AIzaSyAv7QK4qvotGd491fBu1iOYqmWmG_5Q9Ig';
+const GDRIVE_API_KEY = config( 'google_drive' )( 'api_key' );
 const MIME_TYPE_FOLDER = 'application/vnd.google-apps.folder';
 
 // Google App Script Variables
 const SCRIPT_URL_EXECUTION = 'https://script.googleapis.com';
-const SCRIPT_ID = 'MmfSf4AzQaez_YS5SScyV4uV-tPu4-D5Y';
+const SCRIPT_ID = config( 'google_drive' )( 'script_id' );
 const SCRIPT_PATH_EXECUTION = `v1/scripts/${ SCRIPT_ID }:run`;
-const FUNCTION_NAME = 'buildProject';
+const FUNCTION_NAME = config( 'google_drive' )( 'function_name' );
+
+const integrationName = integrationsConstants.GOOGLE_DRIVE;
 
 let auth2;
 let element = null;
@@ -95,8 +101,17 @@ export const runScriptBuilder = ( data, cb ) => {
       cb( resp.error, null );
     } else {
       const payload = resp.response.result;
+      const { folderId } = payload;
+      const buildStatus = {
+        status: buildConstants.DONE,
+        data: {
+          doneURL: `https://drive.google.com/drive/folders/${ folderId }`
+        }
+      };
 
-      cb( null, payload );
+      ProjectBuilderActions.setBuildStatus( integrationName, buildStatus );
+
+      cb( null, { status: 200 } );
     }
   } );
 };

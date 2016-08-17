@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/doapps/genesis/master/static-files/logo-dark.png"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/doapps/genesis/master/static-files/logo-120.png"></p>
 # Genesis
 Genesis is the official project builder from [DoApps](http://doapps.me/). It provides all necessary project structure for managing and start up a new project.
 

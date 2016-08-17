@@ -19,6 +19,8 @@
   "slack": {
     "client_id": "2817642925.69682945538",
     "client_secret": "475551c365be247e08b5c13c4a6cdc8f",
-    "scope": "users:read,groups:write"
+    "scope": "users:read,groups:write,chat:write:bot,chat:write:user",
+    "bot_icon": "https://raw.githubusercontent.com/doapps/genesis/master/static-files/logo-120.png",
+    "bot_name": "Genesis"
   }
 }

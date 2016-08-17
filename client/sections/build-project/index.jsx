@@ -1,9 +1,11 @@
 import React from 'react';
 
 import Main from 'components/main';
+import SummaryProgress from 'components/summary-progress';
 import { TitleSection, SubtitleSection } from 'components/section';
 import NavigationButtons from 'components/navigation';
 import { BuildButton } from 'components/form';
+import { globalBuildConstants } from 'lib/project-builder/build-status-constants';
 
 const debug = require( 'debug' )( 'app:sections:build-project' );
 
@@ -47,7 +49,12 @@ const BuildProjectSection = React.createClass( {
   },
 
   render() {
-    const { buildingProject, buildingDoneURL } = this.props;
+    const {
+      buildProjectHandler,
+      goToPreviousStep,
+      integrationsStatus,
+      globalBuildStatus
+    } = this.props;
 
     return (
       <Main>
@@ -59,11 +66,18 @@ const BuildProjectSection = React.createClass( {
         </SubtitleSection>
         { this.renderSummary() }
         <BuildButton
-          isWorkingInProgress={ buildingProject }
-          isWorkingDoneURL={ buildingDoneURL }
-          onClick={ this.props.buildProjectHandler } />
+          statusButton={ globalBuildStatus }
+          onClick={ buildProjectHandler } />
+          {
+            globalBuildStatus !== globalBuildConstants.IDLE
+            ? <div>
+                <br/>
+                <SummaryProgress itemStatus={ integrationsStatus } />
+              </div>
+            : null
+          }
         <NavigationButtons
-          onClickPrevious={ this.props.goToPreviousStep } />
+          onClickPrevious={ goToPreviousStep } />
       </Main>
     );
   }
