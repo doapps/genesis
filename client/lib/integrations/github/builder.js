@@ -203,11 +203,11 @@ function buildProjectStructure( environment, cb ) {
 
       debug( 'buildParameters', buildParameters );
 
-      setTimeout( () => {
-        debug( 'done gscript' );
-        cb( null, { status: 200 } );
-      }, 1500 );
-      // runScriptBuilder( buildParameters, cb );
+      // setTimeout( () => {
+      //   debug( 'done gscript' );
+      //   cb( null, { status: 200 } );
+      // }, 1500 );
+      runScriptBuilder( buildParameters, cb );
     } );
   } );
 }
