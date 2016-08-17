@@ -102,13 +102,17 @@ const BasicSetupSection = React.createClass( {
           stepNumber="6"
           title={ <span>Seleccione la <strong>carpeta raíz</strong></span> }
           description={ <span>Aquí se creará la carpeta <strong>{ this.props.projectNamespace }</strong></span> }>
-          <SelectFolderDrive handleSelection={ this.props.setRootFolderId } />
+          <SelectFolderDrive
+            handleSelection={ this.props.setRootFolderProps }
+            folderName={ this.props.rootFolderName } />
         </Step>
         <Step
           stepNumber="7"
           title={ <span>Seleccione la <strong>carpeta de templates</strong></span> }
           description="Esta carpeta debe contener todos los templates descritos en el dspp">
-          <SelectFolderDrive handleSelection={ this.props.setTemplatesFolderId } />
+          <SelectFolderDrive
+            handleSelection={ this.props.setTemplatesFolderProps }
+            folderName={ this.props.templatesFolderName } />
         </Step>
         <br/>
         <NavigationButtons

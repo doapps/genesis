@@ -39,9 +39,9 @@ const Masterbar = React.createClass( {
               <div className="nav-left">
               </div>
               <div className="nav-center">
-                <a className="nav-item" href="#">
+                <div className="nav-item">
                   <LogoIcon/>
-                </a>
+                </div>
               </div>
               <div className="nav-right nav-menu">
                 { this.renderUserLabel() }

@@ -196,25 +196,18 @@ export const BuildButton = React.createClass( {
 export const SelectFolderDrive = React.createClass( {
   displayName: 'SelectFolderDrive',
 
-  getInitialState() {
-    return {
-      folderName: '',
-    };
-  },
-
   selectFolder() {
     const { handleSelection } = this.props;
 
     createPicker( resp => {
       const { folderId, folderName } = resp;
 
-      this.setState( { folderName } );
-      handleSelection( folderId );
+      handleSelection( folderId, folderName );
     } );
   },
 
   render() {
-    const { folderName } = this.state;
+    const { folderName } = this.props;
 
     const styleContainer = classnames( {
       control: true,

@@ -100,6 +100,8 @@ const Builder = React.createClass( {
       currentStep: 0,
       rootFolderId: '',
       templatesFolderId: '',
+      rootFolderName: '',
+      templatesFolderName: '',
       gitlabCredentials: null,
       trelloCredentials: null,
       slackCredentials: null,
@@ -347,8 +349,11 @@ const Builder = React.createClass( {
     } );
   },
 
-  setFolderId( prop, id ) {
-    this.setState( { [ prop ]: id } );
+  setFolderProp( propId, propName, id, name ) {
+    this.setState( {
+      [ propId ]: id,
+      [ propName ]: name
+    } );
   },
 
   renderStep1() {
@@ -373,8 +378,10 @@ const Builder = React.createClass( {
         deselectSource={ this.deselectSource }
         selectSource={ this.selectSource }
         goToNextStep={ this.goToNextStep }
-        setRootFolderId={ this.setFolderId.bind( null, 'rootFolderId' ) }
-        setTemplatesFolderId={ this.setFolderId.bind( null, 'templatesFolderId' ) } />
+        rootFolderName={ this.state.rootFolderName }
+        templatesFolderName={ this.state.templatesFolderName }
+        setRootFolderProps={ this.setFolderProp.bind( null, 'rootFolderId', 'rootFolderName' ) }
+        setTemplatesFolderProps={ this.setFolderProp.bind( null, 'templatesFolderId', 'templatesFolderName' ) } />
     );
   },
 

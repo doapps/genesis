@@ -77,7 +77,7 @@ const SlackIntegration = React.createClass( {
       <ConnectionCard
         title="Slack"
         iconClass="fa fa-slack"
-        description="for channels"
+        description="for channel"
         infoLogged={ credentials }
         onClick={ this.connect } />
     );
