@@ -26,7 +26,7 @@ function getBoardLists( targets ) {
 function buildTrelloData( environment, cb ) {
   const {
     trelloToken: token,
-    projectNamespace: boardName,
+    projectName: boardName,
     targets
   } = environment;
 

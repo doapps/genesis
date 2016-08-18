@@ -37,7 +37,7 @@ const BasicSetupSection = React.createClass( {
           Estructura del proyecto
         </TitleSection>
         <SubtitleSection>
-          Se procederá a constuir la siguiente estructura de archivos y carpetas.
+          Se construirá la siguiente estructura de archivos y carpetas.
         </SubtitleSection>
         <div className="columns">
           <div className="column is-3">

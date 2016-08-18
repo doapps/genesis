@@ -61,7 +61,7 @@ function buildRepositories( environment, cb ) {
       const filePath = 'README.md';
       const branchName = 'master';
       const content = getInitialReadme( repository );
-      const commitMessage = 'initial commit';
+      const commitMessage = 'initial commit :rocket:';
 
       APIHandler.createFileOnBranch( token, projectId, filePath, branchName, content, commitMessage, errNewFile => {
         if ( errNewFile ) {

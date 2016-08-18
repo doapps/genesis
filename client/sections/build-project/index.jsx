@@ -13,7 +13,7 @@ const BuildProjectSection = React.createClass( {
   renderConfirmationText() {
     return (
       <p>
-        <strong>Confirme</strong> estos datos para proceder a construir la estructura del proyecto.
+        <strong>Confirme</strong> estos datos para que Genesis haga su trabajo.
       </p>
     );
   },

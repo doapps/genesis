@@ -485,7 +485,7 @@ const Builder = React.createClass( {
   },
 
   getTrelloBoard() {
-    const boardName = this.state.projectNamespace;
+    const boardName = this.state.projectName;
 
     return [ boardName ];
   },
@@ -535,7 +535,7 @@ const Builder = React.createClass( {
         value: this.getProjectName()
       },
       {
-        title: 'Nombre identificador',
+        title: 'Nombre identificador (namespace)',
         value: this.getProjectNamespace()
       },
       {
