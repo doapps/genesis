@@ -6,11 +6,11 @@ Genesis is the official project builder from [DoApps](http://doapps.me/). It pro
 Genesis is currently in production. Now in v1.0.0
 
 ## Approach
-This project aims to build the project structure given by the [dspp](http://doapps.me/) repository with the nesting and constructing the files described in the factory files.
-The app will begin asking for the project name, namespace and device targets. This will require the permissions for Google Drive (our main store house-keeper), Slack(for channel creation), Gitlab(for project repositories) and Trello(for project tracking).
+This project aims to build the project structure given by the [dspp](https://github.com/doapps/dspp) repository with the nesting and constructing the files described in the factory files.
+The app will begin asking for the project name, namespace and device targets. This will require the permissions for Google Drive (our main store house-keeper), Slack(for channel creation), Gitlab(for project repositories) and Trello(for project tracking). Finally, it will build the whole structure of the new project. If the documentation is necessary it is enough to go the dspp repository.
 
 ## Possible future features
-There are a RFC file which handle the proposals and comments for change in the building process of the structure (This is not public).
+There are a RFC file in which we keep the proposals and comments for change in the building process of the structure (This is not public).
 
 ## Development
 
