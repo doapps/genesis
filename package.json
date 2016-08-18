@@ -1,7 +1,7 @@
 {
-  "name": "genesis-app",
+  "name": "genesis",
   "version": "1.0.0-beta",
-  "description": "Genesis main application",
+  "description": "Genesis project builder",
   "main": "index.js",
   "scripts": {
     "start": "node index",

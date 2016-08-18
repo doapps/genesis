@@ -6,14 +6,11 @@ Genesis is the official project builder from [DoApps](http://doapps.me/). It pro
 Genesis is currently in production. Now in v1.0.0
 
 ## Approach
-This project aims to build the project structure given by this repository. i.e. Will build the same tree from the `project` directory.
-The app will begin asking for the project name, namespace and device targets. This will require the permissions for Google Drive (our main store house-keeper), Slack(for channel creation) and Gitlab(for project repositories). Anyway you can fork this repository and customize by your own interest.
-
-## Repository Structure
-The `app` folder keeps the React based web application. Meanwhile the `project` folder stores the template-structure.
+This project aims to build the project structure given by the [dspp](http://doapps.me/) repository with the nesting and constructing the files described in the factory files.
+The app will begin asking for the project name, namespace and device targets. This will require the permissions for Google Drive (our main store house-keeper), Slack(for channel creation), Gitlab(for project repositories) and Trello(for project tracking).
 
 ## Possible future features
-There are a RFC file which handle the proposals and comments for change in the building process of the structure.
+There are a RFC file which handle the proposals and comments for change in the building process of the structure (This is not public).
 
 ## Development
 
@@ -27,7 +24,7 @@ npm install
 
 ### Requirements
 
-node 5+
+node 4.5+
 
 ### Running the app
 
@@ -49,6 +46,12 @@ Also build the production bundle:
 
 ```
 npm run dist
+```
+
+To push directly on github pages simply run the command:
+
+```
+npm run publish-site
 ```
 
 ### Tests
