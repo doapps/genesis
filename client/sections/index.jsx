@@ -31,8 +31,7 @@ const targetsData = [
     targetSync: 'ios',
     scopes: [
       {
-        value: 'default',
-        title: 'Default'
+        value: 'default'
       }
     ]
   },
@@ -44,8 +43,7 @@ const targetsData = [
     targetSync: 'android',
     scopes: [
       {
-        value: 'default',
-        title: 'Default'
+        value: 'default'
       }
     ]
   },
@@ -266,17 +264,23 @@ const Builder = React.createClass( {
   removeScope( indexTarget, indexScope ) {
     const targetDataUpdated = Array.from( this.state.targetsData );
     let syncTargetIndex;
+    let syncTargetShouldUpdateDefault = false;
 
     targetDataUpdated[ indexTarget ].scopes.splice( indexScope, 1 );
 
-    if ( targetDataUpdated[ indexTarget ].scopes.length === 1 && ! targetDataUpdated[ indexTarget ].scopes[ 0 ].value ) {
+    if ( targetDataUpdated[ indexTarget ].scopes.length === 1 ) {
       targetDataUpdated[ indexTarget ].scopes[ 0 ].value = 'default';
+      syncTargetShouldUpdateDefault = true;
     }
 
     syncTargetIndex = findIndex( targetDataUpdated, { namespace: targetDataUpdated[ indexTarget ].targetSync } );
 
     if ( !!~syncTargetIndex ) {
       targetDataUpdated[ syncTargetIndex ].scopes.splice( indexScope, 1 );
+
+      if ( syncTargetShouldUpdateDefault ) {
+        targetDataUpdated[ syncTargetIndex ].scopes[ 0 ].value = 'default';
+      }
     }
 
     this.setState( {
