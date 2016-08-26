@@ -205,12 +205,12 @@ function buildProjectStructure( environment, cb ) {
 
       debug( 'buildParameters', buildParameters );
 
-      setTimeout( () => {
-        debug( 'done gscript' );
-        cb( null, { status: 200 } );
-      }, 1500 );
+      // setTimeout( () => {
+      //   debug( 'done gscript' );
+      //   cb( null, { status: 200 } );
+      // }, 1500 );
 
-      // runScriptBuilder( buildParameters, cb );
+      runScriptBuilder( buildParameters, cb );
     } );
   } );
 }
