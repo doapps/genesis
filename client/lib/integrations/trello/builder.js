@@ -46,7 +46,7 @@ function buildTrelloData( environment, cb ) {
 
     debug( 'boardInfo', boardInfo );
 
-    const { id: boardId } = boardInfo;
+    const { shortUrl, id: boardId } = boardInfo;
     const boardLists = getBoardLists( targets );
 
     async.forEachSeries( boardLists, ( listName, next ) => {
@@ -67,8 +67,7 @@ function buildTrelloData( environment, cb ) {
       const buildStatus = {
         status: buildConstants.DONE,
         data: {
-          doneURL: `http://trello.com`
-          // doneURL: `https://trello.com/b/${ channelName }`
+          doneURL: shortUrl
         }
       };
 

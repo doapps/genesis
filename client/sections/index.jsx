@@ -17,6 +17,7 @@ import GithubTreeActions from 'lib/github-tree/actions';
 import GithubTreeStore from 'lib/github-tree/store';
 import ProjectBuilder from 'lib/project-builder';
 import ProjectBuilderStore from 'lib/project-builder/store';
+import * as repoStructure from 'lib/integrations/gitlab/repo-structure';
 import { globalBuildConstants } from 'lib/project-builder/build-status-constants';
 import { slugify } from 'lib/form-helpers';
 
@@ -318,15 +319,15 @@ const Builder = React.createClass( {
   },
 
   checkIfAreSelectedScopes() {
-    let result = false;
+    let resultScopes = false;
 
     this.state.targetsData.forEach( target => {
       if ( target.type === 'select' ) {
-        result = target.scopes.some( scope => this.state[ this.getSelectItemState( scope.value ) ] );
+        resultScopes = target.scopes.some( scope => this.state[ this.getSelectItemState( scope.value ) ] );
       }
     } );
 
-    return result;
+    return resultScopes;
   },
 
   selectScope( value ) {
@@ -499,7 +500,7 @@ const Builder = React.createClass( {
   },
 
   getRepositories() {
-    const listRepos = [];
+    let listRepos = [];
 
     // For targets and scopes
     this.state.targetsData.forEach( target => {
@@ -526,7 +527,28 @@ const Builder = React.createClass( {
     this.state.backendSources.forEach( source => {
       if ( this.checkIfSourceSelected( source.value ) ) {
         listRepos.push( this.getRepoName( source.value ) );
+
+        if ( source.value === backendSources[0].value ) { // for API docs
+          listRepos.push( this.getRepoName( 'docs', source.value ) );
+        }
       }
+    } );
+
+    // filling with structure for building
+    listRepos = listRepos.map( repo => {
+      let projectRepoData = {};
+
+      if ( /-api-docs$/.test( repo ) ) {
+        projectRepoData = Object.assign( {}, repoStructure.template_repo_api_docs );
+      } else {
+        projectRepoData = Object.assign( {}, repoStructure.template_repo_common );
+      }
+
+      projectRepoData = Object.assign( {}, projectRepoData, {
+        repoName: repo
+      } );
+
+      return projectRepoData;
     } );
 
     return listRepos;
@@ -556,7 +578,7 @@ const Builder = React.createClass( {
       },
       {
         title: 'Repositorios en Gitlab',
-        value: this.getRepositories()
+        value: this.getRepositories().map( repo => repo.repoName )
       }
     ];
 
@@ -574,6 +596,7 @@ const Builder = React.createClass( {
       targets: this.getAvailableTargets()( 'namespace' ),
       macrotargets: this.getAvailableMacrotargets(),
       repositories: this.getRepositories(),
+      gitlabUsername: result( this.state.gitlabCredentials, 'username' ),
       gitlabToken: result( this.state.gitlabCredentials, 'token' ),
       trelloToken: result( this.state.trelloCredentials, 'token' ),
       slackToken: result( this.state.slackCredentials, 'token' )

@@ -9,7 +9,7 @@ const Footer = React.createClass( {
             <p>
               <strong>Ø</strong>
               <br/>
-              <small>v1.0.0-beta</small>
+              <small>v1.0.0</small>
             </p>
           </div>
         </div>

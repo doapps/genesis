@@ -1,13 +1,32 @@
-const project__readme_md = projectName => `
-# ${ projectName }
-New project content
+const generic_readme = {
+  filename: 'README.md',
+  raw: ( repoTitle, additionalReadmeText = '' ) => `# ${ repoTitle }
+
+${ additionalReadmeText }
 
 ## Licence
-DoApps
-`;
+DoApps`
+};
 
-const api_docs__gitlabCI_yml = () => `
-pages:
+export const template_repo_common = {
+  repoName: '',
+  branches: [ 'master', 'development', 'release', 'hotfix' ],
+  additionalReadmeText: ( username, repoName ) => `## ${ repoName }`,
+  files: [
+    generic_readme
+  ]
+};
+
+export const template_repo_api_docs = {
+  repoName: '',
+  branches: [ 'master' ],
+  additionalReadmeText: ( username, repoName ) => `## ${ repoName }
+[https://${ username }.gitlab.io/${ repoName }](https://${ username }.gitlab.io/${ repoName })`,
+  files: [
+    generic_readme,
+    {
+      filename: '.gitlab-ci.yml',
+      raw: () => `pages:
   stage: deploy
   script:
   - mkdir .public
@@ -17,11 +36,11 @@ pages:
     paths:
     - public
   only:
-  - master
-`;
-
-const api_docs__index_html = projectName => `
-<!DOCTYPE html>
+  - master`
+    },
+    {
+      filename: 'index.html',
+      raw: projectName => `<!DOCTYPE html>
 <html>
   <head>
     <title>API Docs - ${ projectName }</title>
@@ -38,11 +57,11 @@ const api_docs__index_html = projectName => `
     <redoc spec-url='./swagger.yml'></redoc>
     <script src="https://rebilly.github.io/ReDoc/releases/latest/redoc.min.js"></script>
   </body>
-</html>
-`;
-
-const api_docs__swagger_yml = projectName => `
-swagger: "2.0"
+</html>`
+    },
+    {
+      filename: 'swagger.yml',
+      raw: projectName => `swagger: "2.0"
 info:
   version: "0.0.1"
   title: "${ projectName } API Docs"
@@ -81,6 +100,7 @@ definitions:
       name:
         type: "string"
       tag:
-        type: "string"
-
-`;
+        type: "string"`
+    },
+  ]
+};
